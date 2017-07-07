@@ -9,40 +9,73 @@ public class TurnLever : VRTK_InteractableObject {
     public float maxOffset;
 
     public GameObject CurrentController;
-    private Vector3 ContLastLoc;
+    // private Vector3 ContLastLoc;
+
+    private Vector3 LeverOriginPoint;
+
+    public bool TurningRight = false;
+    public bool TurningLeft = false;    
 
     void Start()
     {
-        originalPosition = transform.position;
+        //LeverOriginPoint = transform.localPosition;
+
+        originalPosition = transform.localPosition;
     }
 
     void Update()
     {
+        UpdateBools();
+        Movelever();
+    }
+
+    void Movelever()
+    {
         if (CurrentController != null)
         {
-            float newX = CurrentController.transform.position.x;
+            //updates position of the physical gameobject in relation ot the controller.
+            float newX = CurrentController.transform.parent.localPosition.x;
 
-            if (newX > transform.position.x + maxOffset)
-                newX = transform.position.x + maxOffset;
-            else if (newX < transform.position.x - maxOffset)
-                newX = transform.position.x - maxOffset;
+            if (newX > originalPosition.x + maxOffset)
 
-            Vector3 newPos = this.transform.position;
+                newX = transform.localPosition.x + maxOffset;
+
+            else if (newX < originalPosition.x - maxOffset)
+
+                newX = transform.localPosition.x - maxOffset;
+
+            Vector3 newPos = this.transform.localPosition;
+
             newPos.x = newX;
-            this.transform.position = newPos;
+
+            transform.localPosition = newPos;
+        }
+    }
+
+    void UpdateBools()
+    {
+        //are we turning right or left. This function determines that based on the position of the schtick.
+        TurningRight = false;
+        TurningLeft = false;
+
+        if (CurrentController != null)
+        {
+            if (this.transform.localPosition.x > originalPosition.x)
+                TurningRight = true;
+            else if (this.transform.localPosition.x < originalPosition.x)
+                TurningLeft = true;
         }
     }
 
     public override void StartUsing(GameObject usingObject)
     {
         CurrentController = usingObject;
-        ContLastLoc = CurrentController.transform.position;
     }
 
     public override void StopUsing(GameObject previousUsingObject)
     {
-        transform.position = originalPosition;
         CurrentController = null;
+        transform.localPosition = originalPosition;
     }
 
 }
