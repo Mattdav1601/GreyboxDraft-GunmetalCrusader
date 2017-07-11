@@ -34,19 +34,22 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     void Update()
     {
-
-        this.transform.position = UsingController.transform.position;
-        this.transform.rotation = UsingController.transform.rotation;
-
-        //Take down invuln frames
-        if (InvulFrames > 0)
-            --InvulFrames;
-
-        //Check if the touchpad is pressed
-        if (controllerEvents.touchpadPressed && InvulFrames <= 0)
+        if (UsingController)
         {
-            myPuller.AlreadySpawned = false;
-            Destroy(this.gameObject, 0.0f);
+            this.transform.position = UsingController.transform.position;
+            this.transform.rotation = UsingController.transform.rotation;
+
+
+            //Take down invuln frames
+            if (InvulFrames > 0)
+                --InvulFrames;
+
+            //Check if the touchpad is pressed
+            if (controllerEvents.touchpadPressed && InvulFrames <= 0)
+            {
+                myPuller.AlreadySpawned = false;
+                Destroy(this.gameObject, 0.0f);
+            }
         }
     }
 
