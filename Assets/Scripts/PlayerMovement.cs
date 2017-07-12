@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour {
                 CurrDist = 0;
             }
 
-            rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
             Vector3 Target = GameObject.FindGameObjectWithTag("JumpTarget").transform.position;
 
 
@@ -77,12 +77,19 @@ public class PlayerMovement : MonoBehaviour {
                 NewPos.y = Height;
 
                 this.transform.position = NewPos;
+
+                //rb.MovePosition(NewPos);
             }
         }
         else
         {
-            rb.isKinematic = false;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
             StoredShitYet = false;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        WeDoinAHekkinJumpo = false;
     }
 }

@@ -17,6 +17,13 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
     public GameObject UsingController;
     public GunPuller myPuller;
 
+    float PointerRange = 1000;
+    public Vector3 TargetPos = new Vector3(0,0,0);
+
+    public GameObject LaserPointer;
+
+    public LineRenderer lineRend;
+
     VRTK.VRTK_ControllerEvents controllerEvents;
 
     //The two hands of the mech
@@ -51,6 +58,8 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
                 Destroy(this.gameObject, 0.0f);
             }
         }
+
+        DoRaycast();
     }
 
     //This function will set the basic variables for this object
@@ -89,5 +98,26 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    void DoRaycast()
+    {
+        RaycastHit hit;
+        Vector3[] LineRendPts = new Vector3[2];
+
+        LineRendPts[0] = LaserPointer.transform.position;
+
+        if (Physics.Raycast(transform.position, LaserPointer.transform.forward, out hit, PointerRange))
+        {
+            LineRendPts[1] = hit.point;
+            TargetPos = hit.point;
+        }
+        else
+        {
+            LineRendPts[1] = LaserPointer.transform.position + (LaserPointer.transform.forward * PointerRange);
+            TargetPos = LaserPointer.transform.position + (LaserPointer.transform.forward * PointerRange);
+        }
+
+        lineRend.SetPositions(LineRendPts);
     }
 }

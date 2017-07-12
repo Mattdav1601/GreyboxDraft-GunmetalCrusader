@@ -23,6 +23,9 @@ public class MechaArmIKController : MonoBehaviour
 
     public float ArmMovementSpeed = 5.0f;
 
+    public GameObject LaserPointer;
+    public LineRenderer lineRend;
+
     void Start()
     {
         WristTrans = Wrist.transform;
@@ -33,6 +36,7 @@ public class MechaArmIKController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         Vector3 Target = new Vector3();
         Quaternion TargetR = new Quaternion();
 
@@ -42,13 +46,13 @@ public class MechaArmIKController : MonoBehaviour
             Vector3 GunOff = WeaponInterface.gameObject.transform.localPosition - MechaRoot.transform.localPosition;
             Target = WristOffset + (GunOff) * WeaponOffsetScale;
             // Find a default position for the "standard" controller position and calculate difference from that standard hand position as the line above.
-            TargetR = WeaponInterface.transform.localRotation;
+            TargetR = Quaternion.FromToRotation(WristTrans.position, WeaponInterface.TargetPos);
         }
         else
         {
             // Set goals to resting position
             Target = WristIdentity.localPosition;
-            TargetR = WristIdentity.localRotation;
+            TargetR = WristIdentity.rotation;
 
             string offsetTag;
             GameObject tmpWp;
@@ -62,7 +66,48 @@ public class MechaArmIKController : MonoBehaviour
             if (tmpWp)
                 WeaponInterface = tmpWp.GetComponent<MechaWeaponInterfacePoint>();
         }
-        WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, Target, ArmMovementSpeed * Time.deltaTime); /* + local hand position offset + whatever scaling factor. */
+        WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, Target, ArmMovementSpeed * Time.deltaTime);
         WristTrans.rotation = Quaternion.Lerp(WristTrans.rotation, TargetR, ArmMovementSpeed * Time.deltaTime);
+        */
+        SetLines();
+
+        if (WeaponInterface != null)
+        {
+            WristTrans.LookAt(WeaponInterface.TargetPos);
+            WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, WristOffset + (WeaponInterface.gameObject.transform.localPosition - MechaRoot.transform.localPosition) * WeaponOffsetScale, ArmMovementSpeed * Time.deltaTime);
+        }
+        else
+        {
+            string offsetTag;
+            GameObject tmpWp;
+            if (ActiveSide == MechaWeaponInterfacePoint.E_ActiveSide.EAS_Left)
+                offsetTag = "WeaponInterfaceL";
+            else
+                offsetTag = "WeaponInterfaceR";
+
+            tmpWp = GameObject.FindGameObjectWithTag(offsetTag);
+
+            if (tmpWp)
+                WeaponInterface = tmpWp.GetComponent<MechaWeaponInterfacePoint>();
+        }
+    }
+
+    void SetLines()
+    {
+        if (WeaponInterface)
+        {
+            lineRend.enabled = true;
+
+            Vector3[] LineRendPts = new Vector3[2];
+
+            LineRendPts[0] = LaserPointer.transform.position;
+            LineRendPts[1] = WeaponInterface.TargetPos;
+
+            lineRend.SetPositions(LineRendPts);
+        }
+        else
+        {
+            lineRend.enabled = false;
+        }
     }
 }
