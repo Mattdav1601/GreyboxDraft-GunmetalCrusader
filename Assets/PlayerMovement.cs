@@ -12,11 +12,12 @@ public class PlayerMovement : MonoBehaviour {
     public bool WeDoinAHekkinJumpo = false;
 
     public float BoostSpeed = 1.0f;
-    public float RiseSpeed = 1.0f;
     public float AltLock = 4.0f;
     public Vector3 StoredPos;
     public bool StoredShitYet = false;
     public float StopThreshold = 10.0f;
+
+    private float CurrDist;
 
     public Rigidbody rb;
 
@@ -57,26 +58,26 @@ public class PlayerMovement : MonoBehaviour {
             {
                 StoredPos = this.transform.position;
                 StoredShitYet = true;
+                CurrDist = 0;
             }
 
             rb.isKinematic = true;
             Vector3 Target = GameObject.FindGameObjectWithTag("JumpTarget").transform.position;
-            Vector3 NewPos = Vector3.Lerp(this.transform.position, Target, BoostSpeed * Time.deltaTime);
 
-            // Height Adjust Here
-            float CurrDist = Vector3.Distance(this.transform.position, new Vector3(Target.x, this.transform.position.y, Target.z));
-            float MaxDist = Vector3.Distance(new Vector3(StoredPos.x, this.transform.position.y, StoredPos.z), new Vector3(Target.x, this.transform.position.y, Target.z));
 
-            float MaxHeight = Mathf.Lerp(StoredPos.z, StoredPos.z + AltLock, Mathf.Sin((CurrDist/MaxDist) * Mathf.PI));
-
-            Debug.Log(CurrDist / MaxDist);
-
-            NewPos.y = MaxHeight;//Mathf.Clamp(this.transform.position.y + RiseSpeed * Time.deltaTime, StoredPos.z, StoredPos.z + AltLock); // Lock between our starting height and that + AltLock
-
-            this.transform.position = NewPos;
-
-            if (CurrDist < StopThreshold)
+            float MaxDist = Vector3.Distance(new Vector3(StoredPos.x, 0, StoredPos.z), new Vector3(Target.x, 0, Target.z));
+            if (MaxDist - CurrDist < StopThreshold)
                 WeDoinAHekkinJumpo = false;
+            else
+            {
+                CurrDist += BoostSpeed * Time.deltaTime;
+                Vector3 NewPos = Vector3.Lerp(StoredPos, Target, CurrDist / MaxDist);
+
+                float Height = Mathf.Lerp(StoredPos.y, StoredPos.y + AltLock, Mathf.Sin((CurrDist / MaxDist) * Mathf.PI));
+                NewPos.y = Height;
+
+                this.transform.position = NewPos;
+            }
         }
         else
         {

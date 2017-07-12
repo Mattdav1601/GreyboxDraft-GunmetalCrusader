@@ -39,16 +39,16 @@ public class MechaArmIKController : MonoBehaviour
         if (WeaponInterface)
         {
             //WristTrans.position = WeaponInterface.UsingController.transform.parent.position + WristOffset;
-            Vector3 GunOff = WeaponInterface.gameObject.transform.position - MechaRoot.transform.position;
+            Vector3 GunOff = WeaponInterface.gameObject.transform.localPosition - MechaRoot.transform.localPosition;
             Target = WristOffset + (GunOff) * WeaponOffsetScale;
             // Find a default position for the "standard" controller position and calculate difference from that standard hand position as the line above.
-            TargetR = WeaponInterface.transform.rotation;
+            TargetR = WeaponInterface.transform.localRotation;
         }
         else
         {
             // Set goals to resting position
-            Target = WristIdentity.position;
-            TargetR = WristIdentity.rotation;
+            Target = WristIdentity.localPosition;
+            TargetR = WristIdentity.localRotation;
 
             string offsetTag;
             GameObject tmpWp;
