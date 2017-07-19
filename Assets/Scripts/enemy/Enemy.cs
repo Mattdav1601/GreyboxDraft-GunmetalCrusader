@@ -10,14 +10,17 @@ public class Enemy : MonoBehaviour {
     public GameObject followingObject;
 
     //Health value of the enemy
-    public float health;
+    float health;
     public float maxHealth;
 
     // Navmesh Agent
     private NavMeshAgent agent;
 
-	// Use this for initialization
-	void Start () {
+    EnemySpawning spawner;
+
+    // Use this for initialization
+    void Start () {
+        spawner = FindObjectOfType<EnemySpawning>();
         agent = GetComponent<NavMeshAgent>();
 	}
 
@@ -41,6 +44,9 @@ public class Enemy : MonoBehaviour {
 
         //Make it explode
         ExploderSingleton.Instance.ExplodeObject(this.gameObject);
+
+        //Reduce the count on the spawner
+        --spawner.enemyCount;
     }
 
     //Procced by an outside agent when taking damage
