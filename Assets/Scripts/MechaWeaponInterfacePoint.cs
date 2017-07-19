@@ -30,12 +30,17 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
     public GameObject mechLeft;
     public GameObject mechRight;
 
+    public GameObject JumpDestination;
+    private GameObject Player;
+
     public int InvulFrames = 10;
 
     public Renderer[] rend;
 
     private void Start()
     {
+
+
         SetBasics();
     }
 
@@ -59,6 +64,12 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
             }
         }
 
+        if (controllerEvents.triggerClicked && this.tag == "JumpJetInterface")
+        {
+            Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo = true;
+        }
+
+
         DoRaycast();
     }
 
@@ -67,13 +78,17 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
     {
         mechRight = GameObject.FindGameObjectWithTag("MechR");
         mechLeft = GameObject.FindGameObjectWithTag("MechL");
+
+        JumpDestination = GameObject.FindGameObjectWithTag("JumpTarget");
+        Player = GameObject.FindGameObjectWithTag("Player");
+
         controllerEvents = UsingController.GetComponent<VRTK.VRTK_ControllerEvents>();
 
         switch (ActiveSide)
         {
             case E_ActiveSide.EAS_Left:
                 {
-                    mechLeft.GetComponent<VRTK.VRTK_Pointer>().pointerRenderer = mechLeft.GetComponent<VRTK.VRTK_StraightPointerRenderer>();
+                   // mechLeft.GetComponent<VRTK.VRTK_Pointer>().pointerRenderer = mechLeft.GetComponent<VRTK.VRTK_StraightPointerRenderer>();
                     this.gameObject.tag = "WeaponInterfaceL";
                     foreach (Renderer r in rend)
                         r.material.SetColor("_OutlineColor", Color.green);
@@ -82,8 +97,9 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
             case E_ActiveSide.EAS_Right:
                 {
-                    mechRight.GetComponent<VRTK.VRTK_Pointer>().pointerRenderer = mechRight.GetComponent<VRTK.VRTK_StraightPointerRenderer>();
+                   // mechRight.GetComponent<VRTK.VRTK_Pointer>().pointerRenderer = mechRight.GetComponent<VRTK.VRTK_StraightPointerRenderer>();
                     this.gameObject.tag = "WeaponInterfaceR";
+                  
                     foreach (Renderer r in rend)
                         r.material.SetColor("_OutlineColor", Color.green);
                 }
@@ -91,12 +107,33 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
             case E_ActiveSide.EAS_Up:
                 {
-                    mechRight.GetComponent<VRTK.VRTK_Pointer>().pointerRenderer = mechRight.GetComponent<VRTK.VRTK_BezierPointerRenderer>();
+                   // mechRight.GetComponent<VRTK.VRTK_Pointer>().pointerRenderer = mechRight.GetComponent<VRTK.VRTK_BezierPointerRenderer>();
                     this.gameObject.tag = "JumpJetInterface";
+                   
                     foreach (Renderer r in rend)
                         r.material.SetColor("_OutlineColor", Color.yellow);
                 }
                 break;
+        }
+    }
+
+    void SetJumpPoint(Vector3 target)
+    {
+        JumpDestination.SetActive(true);
+        if (Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo == false)
+        {
+            JumpDestination.transform.position = target;
+        }
+
+
+        if (this.gameObject.tag == "JumpJetInterface")
+        {
+            JumpDestination.GetComponent<Renderer>().enabled = true;
+        }
+
+        else
+        {
+            JumpDestination.GetComponent<Renderer>().enabled = false;
         }
     }
 
@@ -111,6 +148,11 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
         {
             LineRendPts[1] = hit.point;
             TargetPos = hit.point;
+
+            if (this.tag == "JumpJetInterface")
+            {
+                SetJumpPoint(hit.point);
+            }
         }
         else
         {

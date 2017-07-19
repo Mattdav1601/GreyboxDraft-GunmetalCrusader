@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject ObjectWeTurn;
 
     public bool WeDoinAHekkinJumpo = false;
+   // private GameObject JumpController;
 
     public float BoostSpeed = 1.0f;
     public float AltLock = 4.0f;
@@ -17,7 +18,10 @@ public class PlayerMovement : MonoBehaviour {
     public bool StoredShitYet = false;
     public float StopThreshold = 10.0f;
 
+    //VRTK.VRTK_ControllerEvents controllerEvents;
+
     private float CurrDist;
+    public bool canjumpthatdistance = false;
 
     public Rigidbody rb;
 
@@ -32,6 +36,11 @@ public class PlayerMovement : MonoBehaviour {
     {
         CheckTurning();
         DoJumperoonie();
+
+       
+       
+
+
     }
     //if the TurnLever has signalled that it is turning right or left then this function rotates the player frame. 
     void CheckTurning()
@@ -67,9 +76,12 @@ public class PlayerMovement : MonoBehaviour {
 
             float MaxDist = Vector3.Distance(new Vector3(StoredPos.x, 0, StoredPos.z), new Vector3(Target.x, 0, Target.z));
             if (MaxDist - CurrDist < StopThreshold)
+            {
                 WeDoinAHekkinJumpo = false;
+            }
             else
             {
+
                 CurrDist += BoostSpeed * Time.deltaTime;
                 Vector3 NewPos = Vector3.Lerp(StoredPos, Target, CurrDist / MaxDist);
 
