@@ -18,13 +18,13 @@ public class SpawningObject : MonoBehaviour {
     float checkCount;
 
     //A reference to the spawner
-    EnemySpawning spawner;
+    WaveManager _WaveManager;
 
 	// Use this for initialization
 	void Start () {
         //Initialise variables
-        spawner = FindObjectOfType<EnemySpawning>();
-        checkCount = checkRate = 1.5f;
+        _WaveManager = FindObjectOfType<WaveManager>();
+        checkCount = checkRate = 1f;
 	}
 	
 	// Update is called once per frame
@@ -36,12 +36,16 @@ public class SpawningObject : MonoBehaviour {
         if (checkCount <= 0)
         {
             //Check the distance between this object and the player
-            if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) <= acceptableRange && !spawner.spawningObjects.Contains(this.gameObject))
+            if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) <= acceptableRange && !_WaveManager.spawningObjects.Contains(this.gameObject))
             {
-                spawner.spawningObjects.Add(this.gameObject);
+                _WaveManager.spawningObjects.Remove(this.gameObject);
             }
-            else if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) >= acceptableRange && spawner.spawningObjects.Contains(this.gameObject))
-                spawner.spawningObjects.Remove(this.gameObject);
+            else if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) >= acceptableRange && _WaveManager.spawningObjects.Contains(this.gameObject))
+             
+            _WaveManager.spawningObjects.Add(this.gameObject);
+
+            //checkCount = checkRate;
         }
+
 	}
 }

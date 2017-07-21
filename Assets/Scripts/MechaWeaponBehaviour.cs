@@ -44,7 +44,14 @@ public class MechaWeaponBehaviour : MonoBehaviour {
     private float currentreloadtime;
 
     private bool mustreload = false;
+    private bool CalledReload = false;
+    private bool CalledWeaponEmpty = false;
 
+    [Tooltip("Total amount of clips in storage")]
+    [SerializeField]
+    private float TotalClips;
+
+    private float CurrentClips;
 
     [SerializeField]
     private Material canfire;
@@ -55,7 +62,7 @@ public class MechaWeaponBehaviour : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
+        FullRestock();
 	}
 	
 	// Update is called once per frame
@@ -69,32 +76,58 @@ public class MechaWeaponBehaviour : MonoBehaviour {
 
         ShotTimer = Mathf.Clamp(ShotTimer - Time.deltaTime, 0, ShotInterval);
 
-        if (mustreload)
-        {
-           
-            currentreloadtime -= Time.deltaTime;
-        }
 
         ReloadChecks();
 	}
 
-    void ReloadChecks()
+    void CallReload()
     {
-       
-
-        if (CurrentAmmo <= 0)
+        if (mustreload && CurrentClips < 0)
         {
             this.GetComponent<LineRenderer>().sharedMaterial = nofire;
-            mustreload = true;
+            currentreloadtime -= Time.deltaTime;
+        }
+        else if (mustreload && CurrentClips == 0)
+        {
+            if (!CalledWeaponEmpty)
+            {
+                SoundManager.Instance.WeaponEmpty();
+                CalledWeaponEmpty = true;
+            }
+        }
+    }
+
+    void CallFinishedReloading()
+    {
+        CurrentAmmo = MaxAmmoCount;
+        currentreloadtime = ReloadTime;
+
+        mustreload = false;
+        CalledReload = false;
+        this.GetComponent<LineRenderer>().sharedMaterial = canfire;
+    }
+
+    void FullRestock()
+    {
+        CurrentClips = TotalClips;
+        CalledWeaponEmpty = false;
+    }
+
+    void ReloadChecks()
+    {
+
+        if (CurrentAmmo <= 0)
+        { if (!CalledReload)
+            {
+                CallReload();
+                mustreload = true;
+                CalledReload = true;
+            }
         }
 
         if (currentreloadtime <= 0)
         {
-            CurrentAmmo = MaxAmmoCount;
-            currentreloadtime = ReloadTime;
-
-                mustreload = false;
-            this.GetComponent<LineRenderer>().sharedMaterial = canfire;
+            CallFinishedReloading();
         }
     }
 

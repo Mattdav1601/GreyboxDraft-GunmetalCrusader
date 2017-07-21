@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Projectile : MonoBehaviour {
 
@@ -49,8 +50,14 @@ public class Projectile : MonoBehaviour {
             {
                 if (col.tag == "Enemy")
                 {
-                   col.GetComponent<Enemy>().floating = true;
-                   col.GetComponent<Enemy>().TakeDamage(GrenadeSplashDamage);
+
+                    
+                    NavMeshAgent nav = col.GetComponent<NavMeshAgent>();
+                    nav.enabled = false;
+                    col.GetComponent<Enemy>().Movement = false;
+
+
+                    col.GetComponent<Enemy>().TakeDamage(GrenadeSplashDamage);
 
                     Rigidbody rb = col.GetComponent<Rigidbody>();
                     if (rb != null)
