@@ -36,44 +36,13 @@ public class MechaArmIKController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*
-        Vector3 Target = new Vector3();
-        Quaternion TargetR = new Quaternion();
-
-        if (WeaponInterface)
-        {
-            //WristTrans.position = WeaponInterface.UsingController.transform.parent.position + WristOffset;
-            Vector3 GunOff = WeaponInterface.gameObject.transform.localPosition - MechaRoot.transform.localPosition;
-            Target = WristOffset + (GunOff) * WeaponOffsetScale;
-            // Find a default position for the "standard" controller position and calculate difference from that standard hand position as the line above.
-            TargetR = Quaternion.FromToRotation(WristTrans.position, WeaponInterface.TargetPos);
-        }
-        else
-        {
-            // Set goals to resting position
-            Target = WristIdentity.localPosition;
-            TargetR = WristIdentity.rotation;
-
-            string offsetTag;
-            GameObject tmpWp;
-            if (ActiveSide == MechaWeaponInterfacePoint.E_ActiveSide.EAS_Left)
-                offsetTag = "WeaponInterfaceL";
-            else
-                offsetTag = "WeaponInterfaceR";
-
-            tmpWp = GameObject.FindGameObjectWithTag(offsetTag);
-
-            if (tmpWp)
-                WeaponInterface = tmpWp.GetComponent<MechaWeaponInterfacePoint>();
-        }
-        WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, Target, ArmMovementSpeed * Time.deltaTime);
-        WristTrans.rotation = Quaternion.Lerp(WristTrans.rotation, TargetR, ArmMovementSpeed * Time.deltaTime);
-        */
         SetLines();
 
         if (WeaponInterface != null)
         {
+           // Debug.Log("Should be moving");
             WristTrans.LookAt(WeaponInterface.TargetPos);
+            LaserPointer.transform.LookAt(WeaponInterface.TargetPos);
             WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, WristOffset + (WeaponInterface.gameObject.transform.localPosition - MechaRoot.transform.localPosition) * WeaponOffsetScale, ArmMovementSpeed * Time.deltaTime);
         }
         else

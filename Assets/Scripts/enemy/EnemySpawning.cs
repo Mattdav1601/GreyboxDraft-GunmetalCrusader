@@ -18,11 +18,14 @@ public class EnemySpawning : MonoBehaviour {
     public float spawningRate;
     float spawningCount;
 
+
     //Enemy Game object to spawn
     public GameObject enemyObject;
 
 	// Use this for initialization
 	void Start () {
+
+
         //Initialise spawning rate and count
         spawningCount = spawningRate;
 	}

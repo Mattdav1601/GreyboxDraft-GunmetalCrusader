@@ -7,6 +7,9 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject _TurnLever;
     private TurnLever LeverScript;
     public float turnspeed;
+    public float Maxturnspeed = 5.0f;
+    public float Minturnspeed = 5.0f;
+    public float CurrTurnSpeed = 0;
     public GameObject ObjectWeTurn;
 
     public bool WeDoinAHekkinJumpo = false;
@@ -48,15 +51,28 @@ public class PlayerMovement : MonoBehaviour {
         Vector3 newRot = ObjectWeTurn.transform.eulerAngles;
         if (LeverScript.TurningLeft)
         {
-            newRot.y -= turnspeed * Time.deltaTime;
+            UpdateTurnSpeed(true);
+            newRot.y -= CurrTurnSpeed * Time.deltaTime;
         }
 
         else if (LeverScript.TurningRight)
         {
-            newRot.y += turnspeed * Time.deltaTime;
+            UpdateTurnSpeed(true);
+            newRot.y += CurrTurnSpeed * Time.deltaTime;
         }
 
+        else
+            UpdateTurnSpeed(false);
+
         ObjectWeTurn.transform.eulerAngles = newRot;
+    }
+
+    void UpdateTurnSpeed(bool increasing)
+    {
+        if (increasing)
+            CurrTurnSpeed = Mathf.Clamp(CurrTurnSpeed + (turnspeed * Time.deltaTime), Minturnspeed, Maxturnspeed);
+        else
+            CurrTurnSpeed = Mathf.Clamp(CurrTurnSpeed - (turnspeed * Time.deltaTime * Minturnspeed), Minturnspeed, Maxturnspeed);
     }
 
     void DoJumperoonie()

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MechaWeaponInterfacePoint : MonoBehaviour
 {
-
     public enum E_ActiveSide
     {
         EAS_Left,
@@ -24,7 +23,7 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     public LineRenderer lineRend;
 
-    VRTK.VRTK_ControllerEvents controllerEvents;
+    public VRTK.VRTK_ControllerEvents controllerEvents;
 
     //The two hands of the mech
     public GameObject mechLeft;
@@ -39,7 +38,7 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     private void Start()
     {
-
+        
 
         SetBasics();
     }
@@ -64,9 +63,10 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
             }
         }
 
-        if (controllerEvents.triggerClicked && this.tag == "JumpJetInterface")
+        if (controllerEvents.triggerClicked)
         {
-            Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo = true;
+            if(tag == "JumpJetInterface")
+                    Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo = true;
         }
 
 
