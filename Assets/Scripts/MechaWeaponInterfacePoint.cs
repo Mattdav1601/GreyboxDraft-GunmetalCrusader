@@ -36,6 +36,8 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     public Renderer[] rend;
 
+
+
     private void Start()
     {
         

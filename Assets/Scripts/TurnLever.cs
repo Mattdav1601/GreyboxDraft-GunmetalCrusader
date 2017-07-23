@@ -9,6 +9,9 @@ public class TurnLever : VRTK_InteractableObject {
     public float maxOffset;
 
     public GameObject CurrentController;
+    //private bool CanUseThisController;
+
+    private MechaWeaponInterfacePoint[] WeaponInterfaces;
     // private Vector3 ContLastLoc;
 
     private Vector3 LeverOriginPoint;
@@ -31,7 +34,7 @@ public class TurnLever : VRTK_InteractableObject {
 
     void Movelever()
     {
-        if (CurrentController != null)
+        if (CurrentController != null && CheckControllerEmpty())
         {
             //updates position of the physical gameobject in relation ot the controller.
             float newX = CurrentController.transform.parent.localPosition.x;
@@ -50,6 +53,19 @@ public class TurnLever : VRTK_InteractableObject {
 
             transform.localPosition = newPos;
         }
+    }
+
+    bool CheckControllerEmpty()
+    {
+        WeaponInterfaces = FindObjectsOfType<MechaWeaponInterfacePoint>();
+        foreach (MechaWeaponInterfacePoint meme in WeaponInterfaces)
+        {
+            if (meme.UsingController == CurrentController)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     void UpdateBools()

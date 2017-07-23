@@ -71,7 +71,7 @@ public class WaveManager : MonoBehaviour {
             currentTimeBetweenWaves -= Time.deltaTime;
             if (currentTimeBetweenWaves <= 10 && !calledtensecondwarning)
             {
-                SoundManager.Instance.TenSecondsLeft();
+                soundcontrol.TenSecondsLeft();
                 calledtensecondwarning = true;
             }
         }
@@ -104,7 +104,7 @@ public class WaveManager : MonoBehaviour {
     {
         DownTime = true;
         soundcontrol.EndSoundTrack();
-        Debug.Log("Wave ended");
+       // Debug.Log("Wave ended");
     }
 
 
@@ -146,7 +146,7 @@ public class WaveManager : MonoBehaviour {
         enemiesspawned++;
         enemiesalive++;
         currentTimeBetweenSpawns = TimeBetweenSpawns;
-        Debug.Log("Enemy Spawned");
+      //  Debug.Log("Enemy Spawned");
 
         //check max enemy status
         if ( enemiesspawned >= spawncount)

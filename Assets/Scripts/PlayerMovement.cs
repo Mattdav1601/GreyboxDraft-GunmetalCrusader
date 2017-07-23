@@ -82,8 +82,9 @@ public class PlayerMovement : MonoBehaviour {
             if (!StoredShitYet)
             {
                 StoredPos = this.transform.position;
-                StoredShitYet = true;
+                Debug.Log("stored jump data");
                 CurrDist = 0;
+                StoredShitYet = true;
             }
 
             rb.constraints = RigidbodyConstraints.FreezeAll;

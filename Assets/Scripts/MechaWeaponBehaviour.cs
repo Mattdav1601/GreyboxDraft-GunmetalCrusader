@@ -60,6 +60,11 @@ public class MechaWeaponBehaviour : MonoBehaviour {
     [SerializeField]
     private Material nofire;
 
+    [SerializeField]
+    private Material empty;
+    //pretty sounds <3
+    public SoundManager soundcontrol;
+
     // Use this for initialization
     void Start () {
         FullRestock();
@@ -82,35 +87,53 @@ public class MechaWeaponBehaviour : MonoBehaviour {
 
     void CallReload()
     {
-        if (mustreload && CurrentClips < 0)
+        if (mustreload && CurrentClips > 0)
         {
             this.GetComponent<LineRenderer>().sharedMaterial = nofire;
-            currentreloadtime -= Time.deltaTime;
+           
+            //Debug.Log("Called reload");
         }
         else if (mustreload && CurrentClips == 0)
         {
             if (!CalledWeaponEmpty)
             {
-                SoundManager.Instance.WeaponEmpty();
+                soundcontrol.WeaponEmpty();
+                this.GetComponent<LineRenderer>().sharedMaterial = empty;
                 CalledWeaponEmpty = true;
+                calledfailedreload();
+
+
             }
         }
     }
 
+    void calledfailedreload()
+    {
+        mustreload = false;
+        currentreloadtime = ReloadTime;
+        CalledReload = false;
+    }
+
     void CallFinishedReloading()
     {
+        mustreload = false;
         CurrentAmmo = MaxAmmoCount;
         currentreloadtime = ReloadTime;
-
-        mustreload = false;
+        CurrentClips--;
+       // Debug.Log("Finished reloading");
+       
         CalledReload = false;
         this.GetComponent<LineRenderer>().sharedMaterial = canfire;
     }
 
-    void FullRestock()
+    public void FullRestock()
     {
         CurrentClips = TotalClips;
         CalledWeaponEmpty = false;
+        mustreload = true;
+        CallReload();
+       // Debug.Log("Realixed we need to reload");
+        CalledReload = true;
     }
 
     void ReloadChecks()
@@ -119,12 +142,17 @@ public class MechaWeaponBehaviour : MonoBehaviour {
         if (CurrentAmmo <= 0)
         { if (!CalledReload)
             {
-                CallReload();
                 mustreload = true;
+                CallReload();
+             //   Debug.Log("Realixed we need to reload");
                 CalledReload = true;
             }
         }
 
+        if (mustreload)
+        {
+            currentreloadtime -= Time.deltaTime;
+        }
         if (currentreloadtime <= 0)
         {
             CallFinishedReloading();

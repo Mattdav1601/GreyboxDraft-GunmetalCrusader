@@ -61,7 +61,7 @@ public class Projectile : MonoBehaviour {
 
                     Rigidbody rb = col.GetComponent<Rigidbody>();
                     if (rb != null)
-                        rb.AddExplosionForce(grenadepushback, explosionPosition, explosionRadius, 15.0F);
+                        rb.AddExplosionForce(grenadepushback, explosionPosition, explosionRadius, 150.0F);
                     
                 }
             }
@@ -76,8 +76,12 @@ public class Projectile : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Hit shit");
-        Splash();
+        if (other.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast"))
+        {
+            Debug.Log("Hit shit");
+            Splash();
+        }
+       
         //if (other.tag == "Enemy")
         //{
         //    other.GetComponent<Enemy>().TakeDamage(GrenadeDirectDamage);
