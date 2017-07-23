@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour {
     public float CurrTurnSpeed = 0;
     public GameObject ObjectWeTurn;
 
+    public SoundManager soundController;
+
     public bool WeDoinAHekkinJumpo = false;
    // private GameObject JumpController;
 
@@ -84,6 +86,7 @@ public class PlayerMovement : MonoBehaviour {
                 StoredPos = this.transform.position;
                 Debug.Log("stored jump data");
                 CurrDist = 0;
+                soundController.BoosterEngaged();
                 StoredShitYet = true;
             }
 
@@ -95,6 +98,7 @@ public class PlayerMovement : MonoBehaviour {
             if (MaxDist - CurrDist < StopThreshold)
             {
                 WeDoinAHekkinJumpo = false;
+                Debug.Log("cancelled cause they tried to jump too far");
             }
             else
             {
@@ -120,5 +124,7 @@ public class PlayerMovement : MonoBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         WeDoinAHekkinJumpo = false;
+        Debug.Log("Cancelled because they hit something");
+        Debug.Log(collision.gameObject.name);
     }
 }

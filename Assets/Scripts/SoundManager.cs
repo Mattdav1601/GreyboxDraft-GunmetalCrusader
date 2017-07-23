@@ -14,20 +14,23 @@ public class SoundManager : MonoBehaviour {
     public AudioSource MechEffects;
     public AudioSource LowPriorityMechEffects;
 
+    //CoPilot sounds
     public AudioClip _TenSecondsLeft;
     public AudioClip _RoundStarted;
     public AudioClip _RoundEnded;
     public AudioClip _WeaponEmpty;
+    public AudioClip _GameStarted;
+    public AudioClip _BoostingRocketsEngaged;
+    public AudioClip _WelcomePilot;
 
-    public AudioClip _BoostingRockets;
-
+    //mech sounds
 
    
 
 
     void Start()
     {
-       
+        Invoke("Welcome", 2);
     }
 
     // Update is called once per frame
@@ -36,34 +39,47 @@ public class SoundManager : MonoBehaviour {
        
     }
 
+
     //Copilot voice sounds.
+
+    void Welcome()
+    {
+        CoPilot.PlayOneShot(_WelcomePilot);
+    }
+
     public void RoundStarted()
     {
-
+        CoPilot.PlayOneShot(_RoundStarted);
     }
 
     public void RoundEnded()
     {
+        Invoke("ActualRoundEnded", 3);
+    }
 
+    void ActualRoundEnded()
+    {
+        CoPilot.PlayOneShot(_RoundEnded);
     }
 
     public void TenSecondsLeft()
     {
-
+        CoPilot.PlayOneShot(_TenSecondsLeft);
     }
 
     public void WeaponEmpty()
     {
+        CoPilot.PlayOneShot(_WeaponEmpty);
+    }
 
+    public void BoosterEngaged()
+    {
+        CoPilot.PlayOneShot(_BoostingRocketsEngaged);
     }
 
     //Mech sounds
 
-    void StartedBoosting()
-    {
-
-    }
-
+       
 
     public void EndBoosting()
     {
@@ -87,7 +103,9 @@ public class SoundManager : MonoBehaviour {
 
     public void EndSoundTrack()
     {
-        Music.Stop();
+        StopAllCoroutines();
+        StartCoroutine(FadeOut(Music, 4));
+       // Music.Stop();
 
     }
 
@@ -106,20 +124,20 @@ public class SoundManager : MonoBehaviour {
     //    audioSource.volume = startVolume;
     //}
 
-    //public static IEnumerator FadeOut(AudioSource audioSource, float FadeTime)
-    //{
-    //    float startVolume = audioSource.volume;
+    public static IEnumerator FadeOut(AudioSource audioSource, float FadeTime)
+    {
+        float startVolume = audioSource.volume;
 
-    //    while (audioSource.volume > 0)
-    //    {
-    //        audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
 
-    //        yield return null;
-    //    }
+            yield return null;
+        }
 
-    //    audioSource.Stop();
-    //    audioSource.volume = startVolume;
-    //}
+        audioSource.Stop();
+        audioSource.volume = startVolume;
+    }
 
 
 

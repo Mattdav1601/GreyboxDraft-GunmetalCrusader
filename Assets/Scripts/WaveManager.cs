@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour {
 
-    private float waveCount;
-    public float TimeBetweenWaves;
-    private float currentTimeBetweenWaves;
 
+    private God _GodScript;
 
     public List<GameObject> spawningObjects = new List<GameObject>();
 
@@ -20,6 +18,9 @@ public class WaveManager : MonoBehaviour {
     private float enemiesspawned;
     public float enemiesalive;
 
+    private float waveCount;
+    public float TimeBetweenWaves;
+    private float currentTimeBetweenWaves;
 
     public float TimeBetweenSpawns;
     public float SpawnTimeDecreasePerRound;
@@ -28,6 +29,7 @@ public class WaveManager : MonoBehaviour {
     //make sure things only happen once
     private bool calledwaveend = false;
     private bool calledtensecondwarning = false;
+    private bool calledstartwarning = false;
 
     private bool MaxEnemiesSpawned = false;
 
@@ -39,11 +41,12 @@ public class WaveManager : MonoBehaviour {
 
     public SoundManager soundcontrol;
 
-    private bool DownTime = false;
+    private bool DownTime = true;
     // Use this for initialization
     void Start() {
-
-        NextWave();
+        currentTimeBetweenSpawns = TimeBetweenSpawns;
+        currentTimeBetweenWaves = TimeBetweenWaves;
+        _GodScript = FindObjectOfType<God>();
     }
 
     // Update is called once per frame
@@ -69,11 +72,17 @@ public class WaveManager : MonoBehaviour {
         if (DownTime == true)
         {
             currentTimeBetweenWaves -= Time.deltaTime;
-            if (currentTimeBetweenWaves <= 10 && !calledtensecondwarning)
+            if (currentTimeBetweenWaves <= 11 && !calledtensecondwarning)
             {
                 soundcontrol.TenSecondsLeft();
                 calledtensecondwarning = true;
             }
+            if (currentTimeBetweenWaves <= 3 && !calledstartwarning)
+            {
+                soundcontrol.RoundStarted();
+                calledstartwarning = true;
+            }
+
         }
 
         else
@@ -102,8 +111,10 @@ public class WaveManager : MonoBehaviour {
     //okay the the wave. 
     void WaveEnd()
     {
+        _GodScript.ShopPlacement();
         DownTime = true;
         soundcontrol.EndSoundTrack();
+        soundcontrol.RoundEnded();
        // Debug.Log("Wave ended");
     }
 
@@ -128,7 +139,10 @@ public class WaveManager : MonoBehaviour {
             MaxEnemiesSpawned = false;
             calledwaveend = false;
             calledtensecondwarning = false;
-         
+            calledstartwarning = false;
+
+            _GodScript.ShopDestroy();
+
          //   Debug.Log("Next wave");
         }
        

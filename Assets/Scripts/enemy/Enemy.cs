@@ -21,50 +21,52 @@ public class Enemy : MonoBehaviour {
     [SerializeField]
     private GameObject target;
 
-    [SerializeField]
-    private float StopDist;
-
+  
+    //lets move
     private float dist;
 
     public bool Movement = true;
 
     private float timetillmovement;
 
+    //disable on explosion
     [Tooltip("after being hit by an explosion, how long is the enemy knocked back for")]
     [SerializeField]
     private float TimeDisabledFor;
 
     private bool LookOnly = false;
 
-    //4 point raycast AI
 
-    //[SerializeField]
-    //private int range;
+    //attacking stuff
+    [SerializeField]
+    private float AttackRange;
 
-    //[SerializeField]
-    //private float speed;
+    private float disttoplayer;
 
-    //[SerializeField]
-    //private float rotationSpeed;
+    [SerializeField]
+    private float AttackWindUpTime;
 
-    //[SerializeField]
-    //private float raycastsideoffset;
+    [SerializeField]
+    private float Damagearoony;
 
-    //[SerializeField]
-    //private float raycastlength;
+    private float TimeTillAttack;
 
-    //private RaycastHit hit;
+    [SerializeField]
+    private GameObject DamageIndicator;
 
-    //private bool isThereAnyThing = false;
+    //animations
+    [SerializeField]
+    private Animator MyAnim;
 
-    //EnemySpawning spawner;
-
+  
     void Start () {
-        //spawner = FindObjectOfType<EnemySpawning>();
         agent = GetComponent<NavMeshAgent>();
         target = GameObject.FindGameObjectWithTag("Player");
         health = maxHealth;
         _WaveManager = GameObject.FindObjectOfType<WaveManager>();
+        TimeTillAttack = AttackWindUpTime;
+
+       
 
     }
 
@@ -75,72 +77,59 @@ public class Enemy : MonoBehaviour {
 
         if (Movement)
         {
-            if (dist >= StopDist)
+            
+            if (dist >= AttackRange)
             {
                 if (agent.isActiveAndEnabled)
                 {
-                    agent.SetDestination(target.transform.position);
+                    Move();
                 }
             }
-            //{ Move(); }
-            //Look();
+
+            else
+            {
+                AttackSession();
+                Look();
+            }
+           
         }
         
     }
 
+    void AttackSession()
+    {
+        TimeTillAttack -= Time.deltaTime;
 
-    //void Look()
-    //{
-    //    //Look At Somthly Towards the Target if there is nothing in front.
-    //    if (!isThereAnyThing)
-    //    {
-    //        Vector3 relativePos = target.transform.position - transform.position;
-    //        Quaternion rotation = Quaternion.LookRotation(relativePos);
-    //        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime);
-    //    }
-    //    //Checking for any Obstacle in front.
-    //    // Two rays left and right to the object to detect the obstacle.
-    //    Transform leftRay = transform;
-    //    Transform rightRay = transform;
-    //    //Use Phyics.RayCast to detect the obstacle
-    //    if (Physics.Raycast(leftRay.position + (transform.right * raycastsideoffset), transform.forward, out hit, range) || Physics.Raycast(rightRay.position - (transform.right * raycastsideoffset), transform.forward, out hit, range))
-    //    {
-    //        if (hit.collider.gameObject.CompareTag("Obstacles"))
-    //        {
-    //            isThereAnyThing = true;
-    //            int sidechance = Random.Range(0, 3);
-    //            if (sidechance == 1)
-    //            transform.Rotate(Vector3.up * Time.deltaTime * rotationSpeed);
+        if (TimeTillAttack <= 0)
+        {
+            ActualAttack();
+            Debug.Log("Enemy called attack");
+            TimeTillAttack = AttackWindUpTime;
+        }
+    }
+    void ActualAttack()
+    {
+        target.GetComponent<PlayerHealth>().TakeDamage(Damagearoony);
+        Debug.Log("player told to take damage");
+        Instantiate(DamageIndicator, transform.position + transform.forward * 0.95f + transform.up * 0.8f, Quaternion.identity);
+    }
 
-    //            else if (sidechance == 2)
-    //            transform.Rotate(-Vector3.up * Time.deltaTime * rotationSpeed);
-    //        }
-    //    }
-    //    // Now Two More RayCast At The End of Object to detect that object has already pass the obsatacle.
-    //    // Just making this boolean variable false it means there is nothing in front of object.
-    //    if (Physics.Raycast(transform.position - (transform.forward * raycastlength), transform.right, out hit, 10) ||
-    //    Physics.Raycast(transform.position - (transform.forward * raycastlength), -transform.right, out hit, 10))
-    //    {
-    //        if (hit.collider.gameObject.CompareTag("Obstacles"))
-    //        {
-    //            isThereAnyThing = false;
-    //        }
-    //    }
-    //    // Use to debug the Physics.RayCast.
-    //    Debug.DrawRay(transform.position + (transform.right * range), transform.forward * 20, Color.red);
-    //    Debug.DrawRay(transform.position - (transform.right * range), transform.forward * 20, Color.red);
-    //    Debug.DrawRay(transform.position - (transform.forward * raycastlength), -transform.right * 20, Color.yellow);
-    //    Debug.DrawRay(transform.position - (transform.forward * raycastlength), transform.right * 20, Color.yellow);
+    void Move()
+    {
+        agent.updatePosition = true;
+        agent.updateRotation = true;
+        agent.SetDestination(target.transform.position);
+        MyAnim.SetBool("Moving", true);
+    }
 
-    //}
-
-    //void Move()
-    //{
-    //    // Enemy translate in forward direction.
-    //    transform.Translate(Vector3.forward * Time.deltaTime * speed);
-    //}
-
-    // Update is called once per frame
+    void Look()
+    {
+        agent.updatePosition = false;
+        agent.updateRotation = true;
+        agent.SetDestination(target.transform.position);
+        MyAnim.SetBool("Moving", false);
+    }
+    
 
      
 
@@ -160,16 +149,6 @@ public class Enemy : MonoBehaviour {
          }
 
 
-            //testing purposes
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            OnDeath();
-        }
-
-
-                
-                
     }
 
 
@@ -180,6 +159,7 @@ public class Enemy : MonoBehaviour {
         //Add to the point value
 
         //Make it explode
+        agent.enabled = false;
         ExploderSingleton.Instance.ExplodeObject(this.gameObject);
 
         //Reduce the count on the spawner

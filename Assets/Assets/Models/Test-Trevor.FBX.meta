@@ -1,0 +1,152 @@
+fileFormatVersion: 2
+guid: b90e0db7140ff7f4bb93268474bbc860
+timeCreated: 1500781237
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Trevor_B_Chest
+    100004: Trevor_B_COG
+    100006: Trevor_B_Head
+    100008: Trevor_B_Hips
+    100010: Trevor_B_L_Clavicle
+    100012: Trevor_B_L_Fingers01
+    100014: Trevor_B_L_Fingers02
+    100016: Trevor_B_L_Foot
+    100018: Trevor_B_L_Hand
+    100020: Trevor_B_L_LowerArm
+    100022: Trevor_B_L_LowerLeg
+    100024: Trevor_B_L_Thumb01
+    100026: Trevor_B_L_Thumb02
+    100028: Trevor_B_L_Thumb03
+    100030: Trevor_B_L_Toe
+    100032: Trevor_B_L_UpperArm
+    100034: Trevor_B_L_UpperLeg
+    100036: Trevor_B_Neck
+    100038: Trevor_B_R_Clavicle
+    100040: Trevor_B_R_Fingers01
+    100042: Trevor_B_R_Fingers02
+    100044: Trevor_B_R_Foot
+    100046: Trevor_B_R_Hand
+    100048: Trevor_B_R_LowerArm
+    100050: Trevor_B_R_LowerLeg
+    100052: Trevor_B_R_Thumb01
+    100054: Trevor_B_R_Thumb02
+    100056: Trevor_B_R_Thumb03
+    100058: Trevor_B_R_Toe
+    100060: Trevor_B_R_UpperArm
+    100062: Trevor_B_R_UpperLeg
+    100064: Trevor_B_Root
+    100066: Trevor_B_Spine01
+    100068: Trevor_B_Spine02
+    100070: Trevor_Mesh
+    400000: //RootNode
+    400002: Trevor_B_Chest
+    400004: Trevor_B_COG
+    400006: Trevor_B_Head
+    400008: Trevor_B_Hips
+    400010: Trevor_B_L_Clavicle
+    400012: Trevor_B_L_Fingers01
+    400014: Trevor_B_L_Fingers02
+    400016: Trevor_B_L_Foot
+    400018: Trevor_B_L_Hand
+    400020: Trevor_B_L_LowerArm
+    400022: Trevor_B_L_LowerLeg
+    400024: Trevor_B_L_Thumb01
+    400026: Trevor_B_L_Thumb02
+    400028: Trevor_B_L_Thumb03
+    400030: Trevor_B_L_Toe
+    400032: Trevor_B_L_UpperArm
+    400034: Trevor_B_L_UpperLeg
+    400036: Trevor_B_Neck
+    400038: Trevor_B_R_Clavicle
+    400040: Trevor_B_R_Fingers01
+    400042: Trevor_B_R_Fingers02
+    400044: Trevor_B_R_Foot
+    400046: Trevor_B_R_Hand
+    400048: Trevor_B_R_LowerArm
+    400050: Trevor_B_R_LowerLeg
+    400052: Trevor_B_R_Thumb01
+    400054: Trevor_B_R_Thumb02
+    400056: Trevor_B_R_Thumb03
+    400058: Trevor_B_R_Toe
+    400060: Trevor_B_R_UpperArm
+    400062: Trevor_B_R_UpperLeg
+    400064: Trevor_B_Root
+    400066: Trevor_B_Spine01
+    400068: Trevor_B_Spine02
+    400070: Trevor_Mesh
+    4300000: Trevor_Mesh
+    9500000: //RootNode
+    13700000: Trevor_Mesh
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
