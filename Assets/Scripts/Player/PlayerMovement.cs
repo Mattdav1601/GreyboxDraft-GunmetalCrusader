@@ -88,6 +88,7 @@ public class PlayerMovement : MonoBehaviour {
                 CurrDist = 0;
                 soundController.BoosterEngaged();
                 StoredShitYet = true;
+                soundController.Boosting();
             }
 
             rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -124,7 +125,13 @@ public class PlayerMovement : MonoBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         WeDoinAHekkinJumpo = false;
-        Debug.Log("Cancelled because they hit something");
+        soundController.EndBoostSound();
         Debug.Log(collision.gameObject.name);
+
+        if (collision.collider.tag == "Floor" && Time.timeSinceLevelLoad >= 4)
+        {
+            soundController.EndBoosting();
+            Debug.Log("Should have heard a clang");
+        }
     }
 }

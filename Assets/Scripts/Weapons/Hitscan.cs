@@ -8,12 +8,16 @@ public class Hitscan : MonoBehaviour {
 
     public float SMGDamage;
 
+    private SoundManager sound;
+
     LineRenderer trail;
 
     public float TrailLifeTime = 1.0f;
 
     // Use this for initialization
     void Start () {
+        sound = FindObjectOfType<SoundManager>();
+        sound.SMGFIre();
         trail = GetComponent<LineRenderer>();
         RaycastHit hit;
 

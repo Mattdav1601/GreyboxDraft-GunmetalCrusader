@@ -153,7 +153,11 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
             if (this.tag == "JumpJetInterface")
             {
-                SetJumpPoint(hit.point);
+                if (hit.collider.tag == "Floor")
+                {
+                    SetJumpPoint(hit.point);
+                }
+              
             }
         }
         else

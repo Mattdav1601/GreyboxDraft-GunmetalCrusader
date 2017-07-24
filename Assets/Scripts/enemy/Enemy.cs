@@ -58,8 +58,15 @@ public class Enemy : MonoBehaviour {
     [SerializeField]
     private Animator MyAnim;
 
+
+    //sound
+    private SoundManager sound;
+    private AudioSource audios;
+
   
     void Start () {
+        sound = FindObjectOfType<SoundManager>();
+        audios = this.GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
         target = GameObject.FindGameObjectWithTag("Player");
         health = maxHealth;
@@ -157,7 +164,7 @@ public class Enemy : MonoBehaviour {
     {
         //Add to the death count, if any
         //Add to the point value
-
+        sound.AndroidDie(audios);
         //Make it explode
         agent.enabled = false;
         ExploderSingleton.Instance.ExplodeObject(this.gameObject);

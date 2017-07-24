@@ -17,23 +17,29 @@ public class Projectile : MonoBehaviour {
 
     public GameObject explosionIndicator;
 
+    private SoundManager sound;
+
+    private AudioSource thisone;
+
     private bool exploded = false;
 
     private void Start()
     {
+        sound = FindObjectOfType<SoundManager>();
         Destroy(this.gameObject, ProjectileLifeTime);
-        
+        sound.FiredGrenade();
     }
 
     // Update is called once per frame
     void Update () {
         this.transform.position += this.transform.forward * (ProjSpeed * Time.deltaTime);
+        thisone = this.GetComponent<AudioSource>();
 	}
 
     void Splash()
     {
         //splash code
-       
+        sound.GrenadeExplode(thisone);
        
         Vector3 explosionPosition = transform.position;
         float explosionRadius = 5;

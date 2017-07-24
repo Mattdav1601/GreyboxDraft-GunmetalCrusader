@@ -21,7 +21,7 @@ public class ShopManager : MonoBehaviour {
         Player = GameObject.FindGameObjectWithTag("Player");
         PlayerLeftGun = GameObject.Find("SMG");
         PlayerRightGun = GameObject.Find("Grenade Launcher");
-
+        Debug.Log("Shop found the player");
     }
 	
 	// Update is called once per frame
@@ -29,7 +29,7 @@ public class ShopManager : MonoBehaviour {
     {
         dist = Vector3.Distance(this.transform.position, Player.transform.position);
             
-        if (dist <= ResupplyDistance && resupplied)
+        if (dist <= ResupplyDistance && !resupplied)
         {
             PlayerRightGun.GetComponent<MechaWeaponBehaviour>().FullRestock();
             PlayerLeftGun.GetComponent<MechaWeaponBehaviour>().FullRestock();

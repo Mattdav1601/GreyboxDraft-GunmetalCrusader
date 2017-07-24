@@ -12,7 +12,10 @@ public class SoundManager : MonoBehaviour {
     public AudioSource CoPilot;
 
     public AudioSource MechEffects;
-    public AudioSource LowPriorityMechEffects;
+
+    public AudioSource RightWepEffects;
+
+    public AudioSource LeftWepEffects;
 
     //CoPilot sounds
     public AudioClip _TenSecondsLeft;
@@ -25,8 +28,17 @@ public class SoundManager : MonoBehaviour {
 
     //mech sounds
 
-   
+    public AudioClip _HitGround;
+    public AudioClip _BoostingLoop;
+    public AudioClip _TookDamage;
 
+    //weapon sounds
+    public AudioClip _GrenadeFire;
+    public AudioClip _SMGFire;
+    public AudioClip _GrenadeExplode;
+
+    //android sounds
+    public AudioClip[] _AndroidDie;
 
     void Start()
     {
@@ -36,7 +48,7 @@ public class SoundManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-       
+        
     }
 
 
@@ -79,16 +91,57 @@ public class SoundManager : MonoBehaviour {
 
     //Mech sounds
 
-       
+    public void Boosting()
+    {
+        MechEffects.loop = true;
+        MechEffects.clip = _BoostingLoop;
+        MechEffects.Play();
+    }
+
+    public void EndBoostSound()
+    {
+        MechEffects.loop = false;
+        MechEffects.Stop();
+    }
 
     public void EndBoosting()
     {
+        
+        MechEffects.PlayOneShot(_HitGround);
+    }
 
+    public void TookDamage()
+    {
+        MechEffects.PlayOneShot(_TookDamage);
     }
 
 
+    // Weapon Sounds
+
+    public void FiredGrenade()
+    {
+        RightWepEffects.PlayOneShot(_GrenadeFire);
+    }
+
+    public void SMGFIre()
+    {
+        LeftWepEffects.PlayOneShot(_SMGFire);
+    }
+
+    public void GrenadeExplode(AudioSource source)
+    {
+        source.PlayOneShot(_GrenadeExplode);
+    }
 
 
+    //android sounds
+
+    public void AndroidDie(AudioSource source)
+    {
+        int n = Random.Range(0, _AndroidDie.Length);
+
+        source.PlayOneShot(_AndroidDie[n]);
+    }
 
 
     public void StartSoundTrack()

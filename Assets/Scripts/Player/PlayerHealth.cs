@@ -15,6 +15,7 @@ public class PlayerHealth : MonoBehaviour {
     public GameObject RWep;
     public GameObject LWep;
 
+    public SoundManager soundController;
 
 	// Use this for initialization
 	void Start ()
@@ -37,6 +38,7 @@ public class PlayerHealth : MonoBehaviour {
     public void TakeDamage(float damage)
     {
         CurrentHealth -= damage;
+        soundController.TookDamage();
         Debug.Log("PlayerTookDamage");
         if (CurrentHealth <= 0)
         {

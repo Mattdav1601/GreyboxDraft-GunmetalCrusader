@@ -65,6 +65,11 @@ public class MechaWeaponBehaviour : MonoBehaviour {
     //pretty sounds <3
     public SoundManager soundcontrol;
 
+    //animations
+
+
+    //private bool CalledFire = false;
+
     // Use this for initialization
     void Start () {
         FullRestock();
@@ -168,9 +173,8 @@ public class MechaWeaponBehaviour : MonoBehaviour {
             if (Muzzle && CurrentAmmo >0)
             {
                 Instantiate(ProjectileClass, Muzzle.transform.position, Muzzle.transform.rotation);
-
                 CurrentAmmo--;
-
+                //soundcontrol.FiredGrenade();
                 AlreadyFired = true;
                 ShotTimer = ShotInterval;
             }
