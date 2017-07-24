@@ -9,6 +9,7 @@ public class Hitscan : MonoBehaviour {
     public float SMGDamage;
 
     private SoundManager sound;
+   // public GameObject BulletImpact;
 
     LineRenderer trail;
 
@@ -27,6 +28,7 @@ public class Hitscan : MonoBehaviour {
             if (hit.collider.tag == "Enemy")
             {
                 hit.collider.GetComponent<Enemy>().TakeDamage(SMGDamage);
+               // Instantiate(BulletImpact, hit.point, Quaternion.identity);
             }
             // Do code here
         }

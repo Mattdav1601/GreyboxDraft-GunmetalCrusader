@@ -42,6 +42,7 @@ public class God : MonoBehaviour {
     public void ShopDestroy()
     {
         GameObject ToExplode = GameObject.FindGameObjectWithTag("Shop");
+        if (ToExplode != null)
         ExploderSingleton.Instance.ExplodeObject(ToExplode);
     }
 }

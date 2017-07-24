@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Exploder.Utils;
 
 public class ShopManager : MonoBehaviour {
 
@@ -36,6 +37,7 @@ public class ShopManager : MonoBehaviour {
             Debug.Log("Should have restocked both guns");
             Player.GetComponent<PlayerHealth>().FullHeal();
             resupplied = true;
+            ExploderSingleton.Instance.ExplodeObject(this.gameObject);
         }
 
         

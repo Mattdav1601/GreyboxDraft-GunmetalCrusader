@@ -28,19 +28,20 @@ public class Projectile : MonoBehaviour {
         sound = FindObjectOfType<SoundManager>();
         Destroy(this.gameObject, ProjectileLifeTime);
         sound.FiredGrenade();
+        thisone = this.GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
     void Update () {
         this.transform.position += this.transform.forward * (ProjSpeed * Time.deltaTime);
-        thisone = this.GetComponent<AudioSource>();
 	}
 
     void Splash()
     {
         //splash code
-        sound.GrenadeExplode(thisone);
-       
+       // sound.GrenadeExplode(thisone);
+
         Vector3 explosionPosition = transform.position;
         float explosionRadius = 5;
 

@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour {
     public Vector3 StoredPos;
     public bool StoredShitYet = false;
     public float StopThreshold = 10.0f;
+    public bool canjump = false;
 
     //VRTK.VRTK_ControllerEvents controllerEvents;
 
@@ -81,7 +82,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         if(WeDoinAHekkinJumpo)
         {
-            if (!StoredShitYet)
+            if (!StoredShitYet )
             {
                 StoredPos = this.transform.position;
                 Debug.Log("stored jump data");

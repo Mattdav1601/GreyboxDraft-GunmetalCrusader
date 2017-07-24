@@ -37,6 +37,9 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
     public Renderer[] rend;
 
 
+    public Animation death;
+
+
 
     private void Start()
     {
@@ -61,7 +64,8 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
             if (controllerEvents.touchpadPressed && InvulFrames <= 0)
             {
                 myPuller.AlreadySpawned = false;
-                Destroy(this.gameObject, 0.0f);
+                Destroy(this.gameObject, 1.0f);
+                death.Play();
             }
         }
 

@@ -43,8 +43,8 @@ public class MechaArmIKController : MonoBehaviour
            // Debug.Log("Should be moving");
             WristTrans.LookAt(WeaponInterface.TargetPos);
             LaserPointer.transform.LookAt(WeaponInterface.TargetPos);
-            //WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, WristOffset + (WeaponInterface.gameObject.transform.localPosition - MechaRoot.transform.localPosition) * WeaponOffsetScale, ArmMovementSpeed * Time.deltaTime);
-            WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, WristOffset + (WeaponInterface.gameObject.transform.localPosition - MechaRoot.transform.localPosition ) * WeaponOffsetScale, ArmMovementSpeed * Time.deltaTime);
+            WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, WristOffset + (WeaponInterface.gameObject.transform.localPosition - MechaRoot.transform.localPosition) * WeaponOffsetScale, ArmMovementSpeed * Time.deltaTime);
+            //WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, WristOffset + Vector3.Scale(WeaponInterface.gameObject.transform.localPosition, MechaRoot.transform.localRotation.eulerAngles ) * WeaponOffsetScale, ArmMovementSpeed * Time.deltaTime);
             //WristTrans.localPosition = Vector3.Scale(WristTrans.localPosition, MechaRoot.transform.forward);
             // transform.localRotation = Quaternion.Euler(0, 0,WeaponInterface.gameObject.transform.rotation.z);
 
