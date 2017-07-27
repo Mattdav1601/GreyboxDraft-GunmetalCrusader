@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        LeverScript = _TurnLever.GetComponent<TurnLever>();
+      //  LeverScript = _TurnLever.GetComponent<TurnLever>();
         rb = this.GetComponent<Rigidbody>();
 	}
 	
@@ -51,23 +51,23 @@ public class PlayerMovement : MonoBehaviour {
     //if the TurnLever has signalled that it is turning right or left then this function rotates the player frame. 
     void CheckTurning()
     {
-        Vector3 newRot = ObjectWeTurn.transform.eulerAngles;
-        if (LeverScript.TurningLeft)
-        {
-            UpdateTurnSpeed(true);
-            newRot.y -= CurrTurnSpeed * Time.deltaTime;
-        }
+        //Vector3 newRot = ObjectWeTurn.transform.eulerAngles;
+        //if (LeverScript.TurningLeft)
+        //{
+        //    UpdateTurnSpeed(true);
+        //    newRot.y -= CurrTurnSpeed * Time.deltaTime;
+        //}
 
-        else if (LeverScript.TurningRight)
-        {
-            UpdateTurnSpeed(true);
-            newRot.y += CurrTurnSpeed * Time.deltaTime;
-        }
+        //else if (LeverScript.TurningRight)
+        //{
+        //    UpdateTurnSpeed(true);
+        //    newRot.y += CurrTurnSpeed * Time.deltaTime;
+        //}
 
-        else
-            UpdateTurnSpeed(false);
+        //else
+        //    UpdateTurnSpeed(false);
 
-        ObjectWeTurn.transform.eulerAngles = newRot;
+        //ObjectWeTurn.transform.eulerAngles = newRot;
     }
 
     void UpdateTurnSpeed(bool increasing)

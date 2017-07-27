@@ -40,11 +40,11 @@ public class SpawningObject : MonoBehaviour {
             {
                 _WaveManager.spawningObjects.Remove(this.gameObject);
             }
-            else if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) >= acceptableRange && _WaveManager.spawningObjects.Contains(this.gameObject))
+            else if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) >= acceptableRange && !_WaveManager.spawningObjects.Contains(this.gameObject))
              
             _WaveManager.spawningObjects.Add(this.gameObject);
 
-            //checkCount = checkRate;
+            checkCount = checkRate;
         }
 
 	}

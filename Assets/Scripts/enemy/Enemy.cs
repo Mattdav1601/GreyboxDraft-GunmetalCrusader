@@ -29,6 +29,8 @@ public class Enemy : MonoBehaviour {
 
     private float timetillmovement;
 
+    private bool falling = true;
+
     //disable on explosion
     [Tooltip("after being hit by an explosion, how long is the enemy knocked back for")]
     [SerializeField]
@@ -58,9 +60,11 @@ public class Enemy : MonoBehaviour {
     [SerializeField]
     private Animator MyAnim;
 
+    [SerializeField]
+    private GameObject Trail;
 
-    //sound
-    private SoundManager sound;
+   //sound
+   private SoundManager sound;
     private AudioSource audios;
 
   
@@ -72,9 +76,8 @@ public class Enemy : MonoBehaviour {
         health = maxHealth;
         _WaveManager = GameObject.FindObjectOfType<WaveManager>();
         TimeTillAttack = AttackWindUpTime;
-
-       
-
+        Movement = false;
+        agent.enabled = false;
     }
 
     //Called at a fixed rate
@@ -82,7 +85,7 @@ public class Enemy : MonoBehaviour {
     {
         dist = Vector3.Distance(target.transform.position, transform.position);
 
-        if (Movement)
+        if (Movement && falling == false)
         {
             
             if (dist >= AttackRange)
@@ -142,7 +145,7 @@ public class Enemy : MonoBehaviour {
 
     void Update()
     {
-        if (Movement == false)
+        if (Movement == false && falling == false)
          {
             timetillmovement += Time.deltaTime;
 
@@ -186,5 +189,16 @@ public class Enemy : MonoBehaviour {
         //Check if health is less than zero
         if (health <= 0)
             OnDeath();
+    }
+
+    void OnCollisionEnter(Collision Col )
+    {
+        if (Col.collider.tag == "Floor")
+        {
+            agent.enabled = true;
+            falling = false;
+            Movement = true;
+            Destroy(Trail);
+        }
     }
 }
