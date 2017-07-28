@@ -157,7 +157,7 @@ public class Enemy : MonoBehaviour {
 
 
     //Procced on the death of the agent
-    void OnDeath()
+    public void OnDeath()
     {
         //Add to the death count, if any
         //Add to the point value
