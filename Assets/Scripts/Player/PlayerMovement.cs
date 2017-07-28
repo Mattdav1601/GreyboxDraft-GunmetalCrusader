@@ -179,7 +179,8 @@ public class PlayerMovement : MonoBehaviour {
             Debug.Log("Should have heard a clang");
         }
 
-        else if (collision.collider.tag == "Enemy" && rb.velocity.y >= 1)
+        else if (collision.collider.tag == "Enemy" && rb.velocity.y 
+           <= -1)
         {
             //call death
             collision.collider.GetComponent<Enemy>().OnDeath();
