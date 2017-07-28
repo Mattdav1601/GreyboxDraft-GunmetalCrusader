@@ -112,16 +112,10 @@ public class Enemy : MonoBehaviour {
 
         if (TimeTillAttack <= 0)
         {
-            ActualAttack();
+            target.GetComponent<PlayerHealth>().TakeDamage(Damagearoony);
             Debug.Log("Enemy called attack");
             TimeTillAttack = AttackWindUpTime;
         }
-    }
-    void ActualAttack()
-    {
-        target.GetComponent<PlayerHealth>().TakeDamage(Damagearoony);
-        Debug.Log("player told to take damage");
-        Instantiate(DamageIndicator, transform.position + transform.forward * 0.95f + transform.up * 0.8f, Quaternion.identity);
     }
 
     void Move()
@@ -136,7 +130,7 @@ public class Enemy : MonoBehaviour {
     {
         agent.updatePosition = false;
         agent.updateRotation = true;
-        agent.SetDestination(target.transform.position);
+        //agent.SetDestination(target.transform.position);
         MyAnim.SetBool("Moving", false);
     }
     
