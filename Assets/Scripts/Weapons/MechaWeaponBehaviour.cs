@@ -46,6 +46,8 @@ public class MechaWeaponBehaviour : MonoBehaviour {
     private bool mustreload = false;
     private bool CalledReload = false;
     private bool CalledWeaponEmpty = false;
+    private bool CalledClipEmpty = false;
+    public bool ToldToReload = false;
 
     [Tooltip("Total amount of clips in storage")]
     [SerializeField]
@@ -89,16 +91,22 @@ public class MechaWeaponBehaviour : MonoBehaviour {
 
         ReloadChecks();
 	}
+    void CallEmpty()
+    {
+        this.GetComponent<LineRenderer>().sharedMaterial = nofire;
+        CalledClipEmpty = true;
+    }
+
 
     void CallReload()
     {
-        if (mustreload && CurrentClips > 0)
+        if ( CurrentClips > 0)
         {
-            this.GetComponent<LineRenderer>().sharedMaterial = nofire;
-           
-            //Debug.Log("Called reload");
+           // CalledReload = true;
+            CallFinishedReloading();
+            Debug.Log("called reload");
         }
-        else if (mustreload && CurrentClips == 0)
+        else if (CurrentClips == 0)
         {
             if (!CalledWeaponEmpty)
             {
@@ -116,19 +124,19 @@ public class MechaWeaponBehaviour : MonoBehaviour {
     {
         mustreload = false;
         currentreloadtime = ReloadTime;
-        CalledReload = false;
+        //CalledReload = false;
     }
 
     void CallFinishedReloading()
     {
-        mustreload = false;
         CurrentAmmo = MaxAmmoCount;
         currentreloadtime = ReloadTime;
         CurrentClips--;
-       // Debug.Log("Finished reloading");
-       
-        CalledReload = false;
+        CalledClipEmpty = false;
+
+      //  CalledReload = false;
         this.GetComponent<LineRenderer>().sharedMaterial = canfire;
+        Debug.Log("Finished reloading");
     }
 
     public void FullRestock()
@@ -145,23 +153,31 @@ public class MechaWeaponBehaviour : MonoBehaviour {
     {
 
         if (CurrentAmmo <= 0)
-        { if (!CalledReload)
+        {
+            if (!CalledClipEmpty)
             {
-                mustreload = true;
-                CallReload();
-             //   Debug.Log("Realixed we need to reload");
-                CalledReload = true;
+                CallEmpty();
             }
+            if (ToldToReload)
+            {
+               
+                    CallReload();
+                    Debug.Log("weapon Realixed we need to reload");
+                   // CalledReload = true;
+                    ToldToReload = false;
+                
+            }
+          
         }
 
-        if (mustreload)
-        {
-            currentreloadtime -= Time.deltaTime;
-        }
-        if (currentreloadtime <= 0)
-        {
-            CallFinishedReloading();
-        }
+        //if (mustreload)
+        //{
+        //    currentreloadtime -= Time.deltaTime;
+        //}
+        //if (currentreloadtime <= 0)
+        //{
+        //    CallFinishedReloading();
+        //}
     }
 
     void HandleFire()

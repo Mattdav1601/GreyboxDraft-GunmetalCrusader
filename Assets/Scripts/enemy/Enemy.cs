@@ -67,6 +67,8 @@ public class Enemy : MonoBehaviour {
    private SoundManager sound;
     private AudioSource audios;
 
+    //minimap marker
+    public GameObject marker;
   
     void Start () {
         sound = FindObjectOfType<SoundManager>();
@@ -159,6 +161,7 @@ public class Enemy : MonoBehaviour {
     //Procced on the death of the agent
     public void OnDeath()
     {
+        Destroy(marker);
         //Add to the death count, if any
         //Add to the point value
         sound.AndroidDie(audios);
