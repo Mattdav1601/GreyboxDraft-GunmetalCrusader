@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour {
     private float dist;
 
     public bool Movement = true;
+    public float moveSpeed;
 
     private float timetillmovement;
 
@@ -49,7 +50,7 @@ public class Enemy : MonoBehaviour {
     private float AttackWindUpTime;
 
     [SerializeField]
-    private float Damagearoony;
+    public float damage;
 
     private float TimeTillAttack;
 
@@ -114,7 +115,7 @@ public class Enemy : MonoBehaviour {
 
         if (TimeTillAttack <= 0)
         {
-            target.GetComponent<PlayerHealth>().TakeDamage(Damagearoony);
+            target.GetComponent<PlayerHealth>().TakeDamage(damage);
             Debug.Log("Enemy called attack");
             TimeTillAttack = AttackWindUpTime;
         }
@@ -169,9 +170,7 @@ public class Enemy : MonoBehaviour {
         agent.enabled = false;
         ExploderSingleton.Instance.ExplodeObject(this.gameObject);
 
-        //Reduce the count on the spawner
-        _WaveManager.enemiesalive --;
-       // --spawner.enemyCount;
+        EventManager.instance.OnEnemyDeath.Invoke();
     }
 
 

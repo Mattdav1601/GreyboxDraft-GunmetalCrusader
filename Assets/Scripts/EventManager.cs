@@ -4,11 +4,18 @@ using UnityEngine;
 using UnityEngine.Events;
 
 //Shouted out when the round begins
-public class StartRound : UnityEvent{
+public class StartRound : UnityEvent<OnRoundStartPacket>
+{
 }
 
 //Shouted out when the round ends
 public class EndRound : UnityEvent{
+}
+
+//Called every time an enemy dies
+public class EnemyDeath : UnityEvent
+{
+
 }
 
 public class EventManager : MonoBehaviour
@@ -29,6 +36,7 @@ public class EventManager : MonoBehaviour
 
     public StartRound OnRoundStart = new StartRound();
     public EndRound OnRoundEnd = new EndRound();
+    public EnemyDeath OnEnemyDeath = new EnemyDeath();
 
     private void Awake()
     {

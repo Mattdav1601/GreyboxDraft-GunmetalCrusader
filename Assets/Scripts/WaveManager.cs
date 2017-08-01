@@ -4,16 +4,129 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour {
 
+    /// <summary>
+    /// The purpose of the WaveManager script is now only to care 
+    /// about telling everyone when a round has started and/or ended.
+    /// </summary>
+    /// 
+
+    public AnimationCurve enemyHealthCurve;
+    
+    //Enemy strength variables
+    [Tooltip("What is the maximum health the enemy will have at endgame?")]
+    public float maximumEnemyHealth;
+    float roundEnemyHealth;
+
+    public AnimationCurve enemySpeedCurve;
+
+    [Tooltip("What is the maximum speed the enemy will have at endgame?")]
+    public float maximumEnemySpeed;
+    float roundEnemySpeed;
+
+    public AnimationCurve enemyDamageCurve;
+
+    [Tooltip("What is the maximum amount of damage the enemy will deal at endgame")]
+    public float maximumEnemyDamage;
+    float roundEnemyDamage;
+
+    [Tooltip("Used to manage how many enemies will spawn the entirety of this round")]
+    public AnimationCurve enemyRoundTotalCurve;
+
+    [Tooltip("What is the total number of enemies you want spawning at endgame?")]
+    public int maximumEnemyTotal;
+    int roundEnemyTotal;
+    int deadEnemyCount;
+
+    public AnimationCurve RoundCooldownCurve;
+
+    [Tooltip("What is the maximum amount of time you want between rounds?")]
+    public float maximumRoundCooldownTime;
+    float roundCooldownTime;
+    float roundCountdown;
+
+    [Tooltip("What is the maximum number of rounds for this game?")]
+    public int maximumRoundNumber;
+    int roundNumber;
+
+    //One packet to be altered and sent as data for other classes
+    OnRoundStartPacket roundStartPacket;
+
+    //Gamemanager reference
+    GameManager gameManager;
+
+    private void Start()
+    {
+        EventManager.instance.OnEnemyDeath.AddListener(EnemyDeathCheck);
+
+        //Initialise some stuff;
+        if (!(gameManager = FindObjectOfType<GameManager>()))
+            Debug.LogError("There is no Game Manager present on the scene!");
+
+        //Shorten the time to the start of the first round
+        roundCountdown = roundCooldownTime / 4;
+    }
+
+    private void Update()
+    {
+        RoundStarter();
+    }
+
+    //Count down and start the round when asked
+    void RoundStarter()
+    {
+        if (roundCountdown <= 0)
+        {
+            ++roundNumber;
+
+            ValueUpdateCheck();
+
+            //Create a packet of data to send to other classes for use
+            OnRoundStartPacket onStartPack = new OnRoundStartPacket();
+
+            ///ASSIGN ONSTART PACKS VARIABLES HERE
+            onStartPack.enemySpeed = roundEnemySpeed;
+            onStartPack.enemyMaxHealth = roundEnemyHealth;
+            onStartPack.enemyDamage = roundEnemyDamage;
+
+            EventManager.instance.OnRoundStart.Invoke(onStartPack);
+        }
+        else        
+            //Countdown on timer
+            roundCountdown -= Time.deltaTime;
+    }
+
+    //Perform checks to end the round
+    void EnemyDeathCheck()
+    {
+        //Add to the currnt enemy death counter
+        ++deadEnemyCount;
+
+        //If the dead enemy count is equal to the total number of enemies possible this round, end the round
+        if(deadEnemyCount == roundEnemyTotal)
+        {
+            deadEnemyCount = 0;
+            roundCountdown = roundCooldownTime;
+            EventManager.instance.OnRoundEnd.Invoke();
+        }
+    }
+
+    //Update this round's values
+    void ValueUpdateCheck()
+    {
+        float percentageCompletion = roundNumber / maximumRoundNumber;
+
+        //Set enemy values for this round
+        roundEnemyHealth = maximumEnemyHealth * enemyHealthCurve.Evaluate(percentageCompletion);
+        roundEnemyDamage = maximumEnemyDamage * enemyDamageCurve.Evaluate(percentageCompletion);
+        roundEnemySpeed = maximumEnemySpeed * enemySpeedCurve.Evaluate(percentageCompletion);
+        roundEnemyTotal = (int)(maximumEnemyTotal * enemyRoundTotalCurve.Evaluate(percentageCompletion));
+    }
+
+
 
     private God _GodScript;
 
     public List<GameObject> spawningObjects = new List<GameObject>();
-
-
-    private float spawncount;
-    public float BaseSpawnAmount;
-    public float SpawnMultiplier;
-
 
     private float enemiesspawned;
     public float enemiesalive;
@@ -43,7 +156,7 @@ public class WaveManager : MonoBehaviour {
 
     private bool DownTime = true;
     // Use this for initialization
-    void Start() {
+   /* void Start() {
         currentTimeBetweenSpawns = TimeBetweenSpawns;
         currentTimeBetweenWaves = TimeBetweenWaves;
         _GodScript = FindObjectOfType<God>();
@@ -64,7 +177,7 @@ public class WaveManager : MonoBehaviour {
         }
 
         EnemyChecks();
-    }
+    }*/
    
     //run down the timers for waves and spawners where appriopriate
     void DownTimeChecks()

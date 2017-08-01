@@ -14,38 +14,42 @@ public class SpawningObject : MonoBehaviour {
     public float acceptableRange;
 
     //Controls how often the object will check if it can spawn things
-    public float checkRate;
-    float checkCount;
+    public float spawnCheckRate;
+    float spawnCheckCount;
 
     //A reference to the spawner
-    WaveManager _WaveManager;
+    EnemySpawning enemySpawning;
 
 	// Use this for initialization
 	void Start () {
         //Initialise variables
-        _WaveManager = FindObjectOfType<WaveManager>();
-        checkCount = checkRate = 1f;
+        enemySpawning = FindObjectOfType<EnemySpawning>();
+        spawnCheckCount = spawnCheckRate = 2.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        SpawnEnemies();
+	}
+
+    void SpawnEnemies()
+    {
         //Countdown
-        checkCount -= Time.deltaTime;
+        spawnCheckCount -= Time.deltaTime;
 
         //If the count is less than 0
-        if (checkCount <= 0)
+        if (spawnCheckCount <= 0)
         {
             //Check the distance between this object and the player
-            if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) <= acceptableRange && !_WaveManager.spawningObjects.Contains(this.gameObject))
+            if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) <= acceptableRange && !enemySpawning.spawningObjects.Contains(this.gameObject))
             {
-                _WaveManager.spawningObjects.Remove(this.gameObject);
+                enemySpawning.spawningObjects.Remove(this.gameObject);
             }
-            else if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) >= acceptableRange && !_WaveManager.spawningObjects.Contains(this.gameObject))
-             
-            _WaveManager.spawningObjects.Add(this.gameObject);
+            else if (Vector3.Distance(this.gameObject.transform.position, player.gameObject.transform.position) >= acceptableRange && !enemySpawning.spawningObjects.Contains(this.gameObject))
 
-            checkCount = checkRate;
+                enemySpawning.spawningObjects.Add(this.gameObject);
+
+            spawnCheckCount = spawnCheckRate;
         }
-
-	}
+    }
 }
