@@ -20,21 +20,30 @@ public class SoundManager : MonoBehaviour {
     //CoPilot sounds
 
         // round related
-    public AudioClip _TenSecondsLeft;
-    public AudioClip _RoundStarted;
-    public AudioClip _RoundEnded;
+    public AudioClip[] _TenSecondsLeft;
+    public AudioClip[] _RoundStarted;
+    public AudioClip[] _RoundAlmostStarted;
+    public AudioClip[] _RoundEnded;
 
         // weapons related
-    public AudioClip _WeaponEmpty;
-    public AudioClip _Reloading;
-    public AudioClip _WeaponReloaded;
+   
+    public AudioClip[] _Reloading;
+    public AudioClip[] _WeaponReloaded;
 
-    public AudioClip _WeaponOutOfAmmo;
-    public AudioClip _AllWeaponsOutOfAmmo;
+    public AudioClip[] _LeftWeaponEmpty;
+    public AudioClip[] _RightWeaponEmpty;
+    public AudioClip[] _LeftAmmunitionDry;
+    public AudioClip[] _RightAmmunitionDry;
 
-        //booster related
-    public AudioClip _GameStarted;
-    public AudioClip _BoostingRocketsEngaged;
+    public AudioClip[] _AllWeaponsOutOfAmmo;
+
+        // booster related
+    public AudioClip[] _BoostingRocketsEngaged;
+    public AudioClip[] _InvalidLocation;
+    public AudioClip[] _BoostCancelled;
+
+        // Health related
+    public AudioClip[] _TakingDamage;
 
         //startup
     public AudioClip _WelcomePilot;
@@ -61,13 +70,12 @@ public class SoundManager : MonoBehaviour {
         Invoke("Welcome", 2);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
 
 
+    //
+    //
+    //
     //Copilot voice sounds.
 
     void Welcome()
@@ -75,9 +83,14 @@ public class SoundManager : MonoBehaviour {
         CoPilot.PlayOneShot(_WelcomePilot);
     }
 
+    //CoPilot round indicator
+    public void AlmostStarted()
+    {
+        CoPilot.PlayOneShot(_RoundAlmostStarted[Random.Range(0, _RoundAlmostStarted.Length)]);
+    }
     public void RoundStarted()
     {
-        CoPilot.PlayOneShot(_RoundStarted);
+        CoPilot.PlayOneShot(_RoundStarted[Random.Range(0, _RoundStarted.Length)]);
     }
 
     public void RoundEnded()
@@ -87,24 +100,64 @@ public class SoundManager : MonoBehaviour {
 
     void ActualRoundEnded()
     {
-        CoPilot.PlayOneShot(_RoundEnded);
+        CoPilot.PlayOneShot(_RoundEnded[Random.Range(0, _RoundEnded.Length)]);
     }
 
     public void TenSecondsLeft()
     {
-        CoPilot.PlayOneShot(_TenSecondsLeft);
+        CoPilot.PlayOneShot(_TenSecondsLeft[Random.Range(0, _TenSecondsLeft.Length)]);
     }
 
-    public void WeaponEmpty()
-    {
-        CoPilot.PlayOneShot(_WeaponEmpty);
-    }
-
+   //booster CoPilot
     public void BoosterEngaged()
     {
-        CoPilot.PlayOneShot(_BoostingRocketsEngaged);
+        CoPilot.PlayOneShot(_BoostingRocketsEngaged[Random.Range(0,_BoostingRocketsEngaged.Length)]);
     }
 
+    public void CoordinatesInvalid()
+    {
+        CoPilot.PlayOneShot(_InvalidLocation[Random.Range(0, _InvalidLocation.Length)]);
+    }
+
+    public void BoostCancelled()
+    {
+        CoPilot.PlayOneShot(_BoostCancelled[Random.Range(0, _BoostCancelled.Length)]);
+    }
+
+    // weapon reloading copilot
+    public void LeftWeaponEmpty()
+    {
+        CoPilot.PlayOneShot(_LeftWeaponEmpty[Random.Range(0, _LeftWeaponEmpty.Length)]);
+    }
+
+    public void RightWeaponEmpty()
+    {
+        CoPilot.PlayOneShot(_RightWeaponEmpty[Random.Range(0, _RightWeaponEmpty.Length)]);
+    }
+
+    public void RightAmmunitionDry()
+    {
+        CoPilot.PlayOneShot( _RightAmmunitionDry[Random.Range(0, _RightAmmunitionDry.Length)]);
+    }
+
+    public void LeftAmmunitionDry()
+    {
+        CoPilot.PlayOneShot(_LeftAmmunitionDry[Random.Range(0, _LeftAmmunitionDry.Length)]);
+    }
+
+    //health damage copilot warnings
+
+    public void TakingDamage()
+    {
+        CoPilot.PlayOneShot(_TakingDamage[Random.Range(0, _TakingDamage.Length)]);
+    }
+
+
+
+
+    //
+    //
+    //
     //Mech sounds
 
     public void Boosting()
@@ -132,7 +185,15 @@ public class SoundManager : MonoBehaviour {
     }
 
 
-    // Weapon Sounds
+
+
+
+
+
+    //
+    //
+    //
+    // Weapon Sounds (firing)
 
     public void FiredGrenade()
     {
@@ -148,8 +209,15 @@ public class SoundManager : MonoBehaviour {
     {
         source.PlayOneShot(_GrenadeExplode);
     }
+    
 
 
+
+
+ 
+    //
+    //
+    //
     //android sounds
 
     public void AndroidDie(AudioSource source)
@@ -160,6 +228,11 @@ public class SoundManager : MonoBehaviour {
     }
 
 
+
+    //
+    //
+    //
+    // SoundTrack
     public void StartSoundTrack()
     {
 
@@ -174,24 +247,9 @@ public class SoundManager : MonoBehaviour {
     {
         StopAllCoroutines();
         StartCoroutine(FadeOut(Music, 4));
-       // Music.Stop();
 
     }
 
-    //public static IEnumerator FadeIn(AudioSource audioSource, float FadeTime)
-    //{
-    //    audioSource.Play();
-    //    float startVolume = audioSource.volume;
-
-    //    while (audioSource.volume < 1)
-    //    {
-    //        audioSource.volume += startVolume * Time.deltaTime / FadeTime;
-
-    //        yield return null;
-    //    }
-      
-    //    audioSource.volume = startVolume;
-    //}
 
     public static IEnumerator FadeOut(AudioSource audioSource, float FadeTime)
     {
