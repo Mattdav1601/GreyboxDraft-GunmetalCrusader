@@ -58,6 +58,8 @@ public class WaveManager : MonoBehaviour {
     {
         EventManager.instance.OnEnemyDeath.AddListener(EnemyDeathCheck);
 
+        if (maximumRoundNumber == 0)
+            maximumRoundNumber = 10;
         //Initialise some stuff;
         if (!(gameManager = FindObjectOfType<GameManager>()))
             Debug.LogError("There is no Game Manager present on the scene!");
@@ -113,7 +115,7 @@ public class WaveManager : MonoBehaviour {
     //Update this round's values
     void ValueUpdateCheck()
     {
-        float percentageCompletion = roundNumber / maximumRoundNumber;
+        float percentageCompletion = (float)roundNumber / maximumRoundNumber;
 
         //Set enemy values for this round
         roundEnemyHealth = maximumEnemyHealth * enemyHealthCurve.Evaluate(percentageCompletion);
@@ -124,161 +126,161 @@ public class WaveManager : MonoBehaviour {
 
 
 
-    private God _GodScript;
+   // private God _GodScript;
 
-    public List<GameObject> spawningObjects = new List<GameObject>();
+   // public List<GameObject> spawningObjects = new List<GameObject>();
 
-    private float enemiesspawned;
-    public float enemiesalive;
+   // private float enemiesspawned;
+   // public float enemiesalive;
 
-    private float waveCount;
-    public float TimeBetweenWaves;
-    private float currentTimeBetweenWaves;
+   // private float waveCount;
+   // public float TimeBetweenWaves;
+   // private float currentTimeBetweenWaves;
 
-    public float TimeBetweenSpawns;
-    public float SpawnTimeDecreasePerRound;
-    private float currentTimeBetweenSpawns;
+   // public float TimeBetweenSpawns;
+   // public float SpawnTimeDecreasePerRound;
+   // private float currentTimeBetweenSpawns;
 
-    //make sure things only happen once
-    private bool calledwaveend = false;
-    private bool calledtensecondwarning = false;
-    private bool calledstartwarning = false;
+   // //make sure things only happen once
+   // private bool calledwaveend = false;
+   // private bool calledtensecondwarning = false;
+   // private bool calledstartwarning = false;
 
-    private bool MaxEnemiesSpawned = false;
+   // private bool MaxEnemiesSpawned = false;
 
-    //  public float maxspawndistance;
+   // //  public float maxspawndistance;
 
-    public GameObject EnemyToSpawn;
+   // public GameObject EnemyToSpawn;
 
-    public GameObject Player;
+   // public GameObject Player;
 
-    public SoundManager soundcontrol;
+   // public SoundManager soundcontrol;
 
-    private bool DownTime = true;
-    // Use this for initialization
-   /* void Start() {
-        currentTimeBetweenSpawns = TimeBetweenSpawns;
-        currentTimeBetweenWaves = TimeBetweenWaves;
-        _GodScript = FindObjectOfType<God>();
-    }
+   // private bool DownTime = true;
+   // // Use this for initialization
+   ///* void Start() {
+   //     currentTimeBetweenSpawns = TimeBetweenSpawns;
+   //     currentTimeBetweenWaves = TimeBetweenWaves;
+   //     _GodScript = FindObjectOfType<God>();
+   // }
 
-    // Update is called once per frame
-    void Update()
-    {
+   // // Update is called once per frame
+   // void Update()
+   // {
 
-        DownTimeChecks();
-        TimeCheckBetweenWaves();
+   //     DownTimeChecks();
+   //     TimeCheckBetweenWaves();
 
-        if (DownTime == false)
-        {
-            if (currentTimeBetweenSpawns <= 0 && !MaxEnemiesSpawned)
-            SpawnEnemies();
+   //     if (DownTime == false)
+   //     {
+   //         if (currentTimeBetweenSpawns <= 0 && !MaxEnemiesSpawned)
+   //         SpawnEnemies();
 
-        }
+   //     }
 
-        EnemyChecks();
-    }*/
+   //     EnemyChecks();
+   // }*/
    
-    //run down the timers for waves and spawners where appriopriate
-    void DownTimeChecks()
-    {
-        if (DownTime == true)
-        {
-            currentTimeBetweenWaves -= Time.deltaTime;
-            if (currentTimeBetweenWaves <= 11 && !calledtensecondwarning)
-            {
-                soundcontrol.TenSecondsLeft();
-                calledtensecondwarning = true;
-            }
-            if (currentTimeBetweenWaves <= 3 && !calledstartwarning)
-            {
-                soundcontrol.RoundStarted();
-                calledstartwarning = true;
-            }
+   // //run down the timers for waves and spawners where appriopriate
+   // void DownTimeChecks()
+   // {
+   //     if (DownTime == true)
+   //     {
+   //         currentTimeBetweenWaves -= Time.deltaTime;
+   //         if (currentTimeBetweenWaves <= 11 && !calledtensecondwarning)
+   //         {
+   //             soundcontrol.TenSecondsLeft();
+   //             calledtensecondwarning = true;
+   //         }
+   //         if (currentTimeBetweenWaves <= 3 && !calledstartwarning)
+   //         {
+   //             soundcontrol.RoundStarted();
+   //             calledstartwarning = true;
+   //         }
 
-        }
+   //     }
 
-        else
-            currentTimeBetweenSpawns -= Time.deltaTime;
-    }
+   //     else
+   //         currentTimeBetweenSpawns -= Time.deltaTime;
+   // }
 
-    void TimeCheckBetweenWaves()
-    {
-        if (currentTimeBetweenWaves <= 0)
-        {
-            NextWave();
-        }
-    }
-
-
-    //are enemies all dead? and did we spawn them all?
-    void EnemyChecks()
-    {
-        if (MaxEnemiesSpawned && enemiesalive == 0)
-        {
-            if (!calledwaveend)
-            WaveEnd();
-            calledwaveend = true;
-        }
-    }
-    //okay the the wave. 
-    void WaveEnd()
-    {
-        _GodScript.ShopPlacement();
-        DownTime = true;
-        soundcontrol.EndSoundTrack();
-        soundcontrol.RoundEnded();
-       // Debug.Log("Wave ended");
-    }
+   // void TimeCheckBetweenWaves()
+   // {
+   //     if (currentTimeBetweenWaves <= 0)
+   //     {
+   //         NextWave();
+   //     }
+   // }
 
 
-    void  NextWave()
-    {
-        if (waveCount <= 10)
-        {
-            waveCount++;
+   // //are enemies all dead? and did we spawn them all?
+   // void EnemyChecks()
+   // {
+   //     if (MaxEnemiesSpawned && enemiesalive == 0)
+   //     {
+   //         if (!calledwaveend)
+   //         WaveEnd();
+   //         calledwaveend = true;
+   //     }
+   // }
+   // //okay the the wave. 
+   // void WaveEnd()
+   // {
+   //     _GodScript.ShopPlacement();
+   //     DownTime = true;
+   //     soundcontrol.EndSoundTrack();
+   //     soundcontrol.RoundEnded();
+   //    // Debug.Log("Wave ended");
+   // }
+
+
+   // void  NextWave()
+   // {
+   //     if (waveCount <= 10)
+   //     {
+   //         waveCount++;
             
-            spawncount = (BaseSpawnAmount * waveCount);
+   //         spawncount = (BaseSpawnAmount * waveCount);
 
-            TimeBetweenSpawns -= SpawnTimeDecreasePerRound;
+   //         TimeBetweenSpawns -= SpawnTimeDecreasePerRound;
 
-            Debug.Log(spawncount);
-            enemiesspawned = 0;
-            DownTime = false;
-            soundcontrol.StartSoundTrack();
-            currentTimeBetweenWaves = TimeBetweenWaves;
+   //         Debug.Log(spawncount);
+   //         enemiesspawned = 0;
+   //         DownTime = false;
+   //         soundcontrol.StartSoundTrack();
+   //         currentTimeBetweenWaves = TimeBetweenWaves;
 
-            //reset one time bools
-            MaxEnemiesSpawned = false;
-            calledwaveend = false;
-            calledtensecondwarning = false;
-            calledstartwarning = false;
+   //         //reset one time bools
+   //         MaxEnemiesSpawned = false;
+   //         calledwaveend = false;
+   //         calledtensecondwarning = false;
+   //         calledstartwarning = false;
 
-            _GodScript.ShopDestroy();
+   //         _GodScript.ShopDestroy();
 
-         //   Debug.Log("Next wave");
-        }
+   //      //   Debug.Log("Next wave");
+   //     }
        
-    }
+   // }
 
 
-    void SpawnEnemies()
-    {
+   // void SpawnEnemies()
+   // {
 
-        int obj = (int)Random.Range(1, spawningObjects.Count);
-        //Find a game object to spawn at
-        Instantiate(EnemyToSpawn, spawningObjects[obj].gameObject.transform.position, spawningObjects[obj].gameObject.transform.rotation);
+   //     int obj = (int)Random.Range(1, spawningObjects.Count);
+   //     //Find a game object to spawn at
+   //     Instantiate(EnemyToSpawn, spawningObjects[obj].gameObject.transform.position, spawningObjects[obj].gameObject.transform.rotation);
 
-        //update and reset
-        enemiesspawned++;
-        enemiesalive++;
-        currentTimeBetweenSpawns = TimeBetweenSpawns;
-      //  Debug.Log("Enemy Spawned");
+   //     //update and reset
+   //     enemiesspawned++;
+   //     enemiesalive++;
+   //     currentTimeBetweenSpawns = TimeBetweenSpawns;
+   //   //  Debug.Log("Enemy Spawned");
 
-        //check max enemy status
-        if ( enemiesspawned >= spawncount)
-        {
-            MaxEnemiesSpawned = true;
-        }
-    }
+   //     //check max enemy status
+   //     if ( enemiesspawned >= spawncount)
+   //     {
+   //         MaxEnemiesSpawned = true;
+   //     }
+   // }
 }

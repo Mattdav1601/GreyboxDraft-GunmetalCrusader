@@ -18,19 +18,35 @@ public class SoundManager : MonoBehaviour {
     public AudioSource LeftWepEffects;
 
     //CoPilot sounds
+
+        // round related
     public AudioClip _TenSecondsLeft;
     public AudioClip _RoundStarted;
     public AudioClip _RoundEnded;
+
+        // weapons related
     public AudioClip _WeaponEmpty;
+    public AudioClip _Reloading;
+    public AudioClip _WeaponReloaded;
+
+    public AudioClip _WeaponOutOfAmmo;
+    public AudioClip _AllWeaponsOutOfAmmo;
+
+        //booster related
     public AudioClip _GameStarted;
     public AudioClip _BoostingRocketsEngaged;
+
+        //startup
     public AudioClip _WelcomePilot;
+
+        // Warnings
 
     //mech sounds
 
     public AudioClip _HitGround;
     public AudioClip _BoostingLoop;
     public AudioClip _TookDamage;
+    public AudioClip _Turning;
 
     //weapon sounds
     public AudioClip _GrenadeFire;
