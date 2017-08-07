@@ -75,7 +75,6 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
                     Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo = true;
         }
 
-
         DoRaycast();
     }
 

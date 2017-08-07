@@ -73,6 +73,11 @@ public class WaveManager : MonoBehaviour {
         RoundStarter();
     }
 
+    public int getRoundNum()
+    {
+        return roundNumber;
+    }
+
     //Count down and start the round when asked
     void RoundStarter()
     {

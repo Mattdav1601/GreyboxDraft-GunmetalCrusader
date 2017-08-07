@@ -72,6 +72,11 @@ public class MechaWeaponBehaviour : MonoBehaviour {
 
     //private bool CalledFire = false;
 
+    public string GetAmmoString()
+    {
+        return CurrentAmmo.ToString() + "/" + CurrentClips.ToString();
+    }
+
     // Use this for initialization
     void Start () {
         FullRestock();
