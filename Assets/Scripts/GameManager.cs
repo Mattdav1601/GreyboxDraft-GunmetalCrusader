@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+    //Keep track of the player's points
+    float playerPoints = 0;
+
+
+
 	// Use this for initialization
 	void Start () {
 		
@@ -13,4 +18,10 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    // IncreaePoints is called whenever the player should gain points
+    public void IncreasePoints(float _points)
+    {
+        playerPoints += _points;
+    }
 }

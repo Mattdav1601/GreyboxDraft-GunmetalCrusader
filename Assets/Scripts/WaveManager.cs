@@ -119,11 +119,16 @@ public class WaveManager : MonoBehaviour {
         //Add to the currnt enemy death counter
         ++deadEnemyCount;
 
+        //Increase the player's points by an amount
+        float pointsInc = (roundEnemyHealth * (float)roundNumber / maximumRoundNumber) * roundEnemySpeed;
+        gameManager.IncreasePoints(pointsInc);
+
         //If the dead enemy count is equal to the total number of enemies possible this round, end the round
         if(deadEnemyCount == roundEnemyTotal)
         {
             deadEnemyCount = 0;
-            roundCountdown = roundCooldownTime;
+            roundStarted = false;
+            pointsInc = roundEnemyTotal * roundEnemySpeed;
             EventManager.instance.OnRoundEnd.Invoke();
         }
     }

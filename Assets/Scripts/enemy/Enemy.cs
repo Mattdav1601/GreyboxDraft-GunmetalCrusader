@@ -64,9 +64,10 @@ public class Enemy : MonoBehaviour {
     [SerializeField]
     private GameObject Trail;
 
-   //sound
-   private SoundManager sound;
+    //sound
+    private SoundManager sound;
     private AudioSource audios;
+    GameManager gameManager;
 
     //minimap marker
     public GameObject marker;
@@ -81,6 +82,9 @@ public class Enemy : MonoBehaviour {
         TimeTillAttack = AttackWindUpTime;
         Movement = false;
         agent.enabled = false;
+
+        //Find game manager
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     //Called at a fixed rate
@@ -178,6 +182,7 @@ public class Enemy : MonoBehaviour {
     public void TakeDamage(float takenDamage)
     {
         //Add some points when hit??
+        gameManager.IncreasePoints(10.0f);
 
         //Take health away equal to the parameter given
         health -= takenDamage;
