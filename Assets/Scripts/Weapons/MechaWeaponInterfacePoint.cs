@@ -43,7 +43,13 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     private void Start()
     {
-        
+        EventManager.instance.OnControllerDisconnect.AddListener((GameObject e)=>
+        { 
+            if(UsingController == e)
+            {
+                Destroy();
+            }
+        });
 
         SetBasics();
     }
@@ -63,9 +69,7 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
             //Check if the touchpad is pressed
             if (controllerEvents.touchpadPressed && InvulFrames <= 0)
             {
-                myPuller.AlreadySpawned = false;
-                Destroy(this.gameObject, 1.0f);
-                death.Play();
+                Destroy();
             }
         }
 
@@ -76,6 +80,13 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
         }
 
         DoRaycast();
+    }
+
+    void Destroy()
+    {
+        myPuller.AlreadySpawned = false;
+        Destroy(this.gameObject, 1.0f);
+        death.Play();
     }
 
     //This function will set the basic variables for this object

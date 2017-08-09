@@ -30,4 +30,20 @@ public class GunPuller : VRTK_InteractableObject {
         }
         else return;        
     }
+
+    //Performed when swiping up
+    public void OnSwipeUp(GameObject usingObject)
+    {
+        if (!AlreadySpawned)
+        {
+            GetComponent<BoxCollider>().isTrigger = true;
+            GameObject newGhost = Instantiate(ghostGun, usingObject.transform.position, Quaternion.identity) as GameObject;
+            newGhost.GetComponent<MechaWeaponInterfacePoint>().UsingController = usingObject;
+            newGhost.GetComponent<MechaWeaponInterfacePoint>().ActiveSide = ActiveSide;
+
+            newGhost.GetComponent<MechaWeaponInterfacePoint>().myPuller = this;
+            AlreadySpawned = true;
+        }
+        else return;  
+    }
 }

@@ -18,6 +18,12 @@ public class EnemyDeath : UnityEvent
 
 }
 
+//Called when the player disconnects from a gun
+public class OnDisconnect : UnityEvent<GameObject>
+{
+
+}
+
 public class EventManager : MonoBehaviour
 {
     private static EventManager inst;
@@ -37,6 +43,7 @@ public class EventManager : MonoBehaviour
     public StartRound OnRoundStart = new StartRound();
     public EndRound OnRoundEnd = new EndRound();
     public EnemyDeath OnEnemyDeath = new EnemyDeath();
+    public OnDisconnect OnControllerDisconnect = new OnDisconnect();
 
     private void Awake()
     {
