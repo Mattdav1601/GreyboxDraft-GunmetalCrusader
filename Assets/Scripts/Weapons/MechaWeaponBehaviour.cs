@@ -115,7 +115,7 @@ public class MechaWeaponBehaviour : MonoBehaviour {
         {
             if (!CalledWeaponEmpty)
             {
-                soundcontrol.WeaponEmpty();
+                //soundcontrol.WeaponEmpty();
                 this.GetComponent<LineRenderer>().sharedMaterial = empty;
                 CalledWeaponEmpty = true;
                 calledfailedreload();

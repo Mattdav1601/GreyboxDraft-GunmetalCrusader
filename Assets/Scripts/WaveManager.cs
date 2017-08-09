@@ -44,6 +44,8 @@ public class WaveManager : MonoBehaviour {
     float roundCooldownTime;
     float roundCountdown;
 
+    bool roundStarted;
+
     [Tooltip("What is the maximum number of rounds for this game?")]
     public int maximumRoundNumber;
     int roundNumber;
@@ -64,6 +66,12 @@ public class WaveManager : MonoBehaviour {
         if (!(gameManager = FindObjectOfType<GameManager>()))
             Debug.LogError("There is no Game Manager present on the scene!");
 
+        //Set the round number to zero and eval cooldown time
+        roundNumber = 0;
+        roundCooldownTime = maximumRoundNumber*RoundCooldownCurve.Evaluate(roundNumber);
+
+        roundStarted = false;
+
         //Shorten the time to the start of the first round
         roundCountdown = roundCooldownTime / 4;
     }
@@ -81,7 +89,7 @@ public class WaveManager : MonoBehaviour {
     //Count down and start the round when asked
     void RoundStarter()
     {
-        if (roundCountdown <= 0)
+        if (roundCountdown <= 0 && !roundStarted)
         {
             ++roundNumber;
 
@@ -96,8 +104,11 @@ public class WaveManager : MonoBehaviour {
             onStartPack.enemyDamage = roundEnemyDamage;
 
             EventManager.instance.OnRoundStart.Invoke(onStartPack);
+
+            roundStarted = true;
+            roundCountdown = roundCooldownTime = maximumRoundNumber * RoundCooldownCurve.Evaluate(roundNumber);            
         }
-        else        
+        else if(!roundStarted)       
             //Countdown on timer
             roundCountdown -= Time.deltaTime;
     }

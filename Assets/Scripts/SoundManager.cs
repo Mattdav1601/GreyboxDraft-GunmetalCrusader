@@ -235,11 +235,9 @@ public class SoundManager : MonoBehaviour {
     // SoundTrack
     public void StartSoundTrack()
     {
-
-               // StopCoroutine("FadeOut");
-                Music.clip = Songs[Random.Range(0, Songs.Length)];
-                Music.Play();
-
+        // StopCoroutine("FadeOut");
+        Music.clip = Songs[Random.Range(0, Songs.Length)];
+        Music.Play();
     }
 
 
