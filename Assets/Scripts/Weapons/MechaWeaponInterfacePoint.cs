@@ -43,7 +43,7 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     private void Start()
     {
-        EventManager.instance.OnControllerDisconnect.AddListener((GameObject e)=>
+        EventManager.instance.OnControllerDisconnect.AddListener((e)=>
         { 
             if(UsingController == e)
             {

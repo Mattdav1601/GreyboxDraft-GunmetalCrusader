@@ -37,6 +37,16 @@ public class WaveManager : MonoBehaviour {
     int roundEnemyTotal;
     int deadEnemyCount;
 
+    [Range(0.0f, 1.0f)]
+    [Tooltip("The percentage of enemies that need to be killed before this clip will play")]
+    public float firstRoundEndWarning;
+
+    [Range(0.0f, 1.0f)]
+    public float secondRoundEndWarning;
+
+    bool playedFirstRoundEndWarning = false;
+    bool playedSecondRoundEndWarning = false;
+
     public AnimationCurve RoundCooldownCurve;
 
     [Tooltip("What is the maximum amount of time you want between rounds?")]
@@ -44,11 +54,17 @@ public class WaveManager : MonoBehaviour {
     float roundCooldownTime;
     float roundCountdown;
 
+    public int tenSecondWarningTimer = 10;
+    public int roundStartingWarningTimer = 5;
+
     bool roundStarted;
 
     [Tooltip("What is the maximum number of rounds for this game?")]
     public int maximumRoundNumber;
     int roundNumber;
+
+    bool playedTenSound = false;
+    bool playedTwoSound = false;
 
     //One packet to be altered and sent as data for other classes
     OnRoundStartPacket roundStartPacket;
@@ -68,12 +84,13 @@ public class WaveManager : MonoBehaviour {
 
         //Set the round number to zero and eval cooldown time
         roundNumber = 0;
-        roundCooldownTime = maximumRoundNumber*RoundCooldownCurve.Evaluate(roundNumber);
+        roundCooldownTime = maximumRoundCooldownTime*RoundCooldownCurve.Evaluate(roundNumber);
 
+        print(roundCooldownTime);
         roundStarted = false;
 
         //Shorten the time to the start of the first round
-        roundCountdown = roundCooldownTime / 4;
+        roundCountdown = roundCooldownTime;
     }
 
     private void Update()
@@ -105,12 +122,32 @@ public class WaveManager : MonoBehaviour {
 
             EventManager.instance.OnRoundStart.Invoke(onStartPack);
 
+            playedFirstRoundEndWarning = playedSecondRoundEndWarning = false;
             roundStarted = true;
             roundCountdown = roundCooldownTime = maximumRoundNumber * RoundCooldownCurve.Evaluate(roundNumber);            
         }
-        else if(!roundStarted)       
+        else if(!roundStarted)
+        {
             //Countdown on timer
             roundCountdown -= Time.deltaTime;
+
+            if(roundNumber != 1)
+            {
+                //The the round warning hasn't played yet, play it
+                if(!playedTenSound && (int)roundCountdown == tenSecondWarningTimer)
+                {
+                    playedTenSound = true;
+                    EventManager.instance.OnRoundStartWarning.Invoke(0);
+                }
+
+                //Same thing for second warning
+                if(!playedTwoSound && (int)roundCountdown == roundStartingWarningTimer)
+                {
+                    playedTwoSound = true;
+                    EventManager.instance.OnRoundStartWarning.Invoke(1);
+                }
+            }
+        }      
     }
 
     //Perform checks to end the round
@@ -123,11 +160,26 @@ public class WaveManager : MonoBehaviour {
         float pointsInc = (roundEnemyHealth * (float)roundNumber / maximumRoundNumber) * roundEnemySpeed;
         gameManager.IncreasePoints(pointsInc);
 
+        float percentageKilled = deadEnemyCount / roundEnemyTotal;
+
+        //Play first clip
+        if(percentageKilled > firstRoundEndWarning && !playedFirstRoundEndWarning)
+        {
+            playedFirstRoundEndWarning = true;
+            EventManager.instance.OnRoundEndWarning.Invoke(false);
+        }
+        //Play second clip
+        else if (percentageKilled > secondRoundEndWarning && !playedSecondRoundEndWarning)
+        {
+            playedSecondRoundEndWarning = true;
+            EventManager.instance.OnRoundEndWarning.Invoke(true);
+        }
+
         //If the dead enemy count is equal to the total number of enemies possible this round, end the round
         if(deadEnemyCount == roundEnemyTotal)
         {
             deadEnemyCount = 0;
-            roundStarted = false;
+            roundStarted = playedTenSound = playedTwoSound = false;
             pointsInc = roundEnemyTotal * roundEnemySpeed;
             EventManager.instance.OnRoundEnd.Invoke();
         }

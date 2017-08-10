@@ -21,6 +21,7 @@ public class SoundManager : MonoBehaviour {
 
         // round related
     public AudioClip[] _TenSecondsLeft;
+
     public AudioClip[] _RoundStarted;
     public AudioClip[] _RoundAlmostStarted;
     public AudioClip[] _RoundEnded;
@@ -71,14 +72,25 @@ public class SoundManager : MonoBehaviour {
     void Start()
     {
         Invoke("Welcome", 2);
+
         EventManager.instance.OnRoundStart.AddListener((p) => {
             RoundStarted();
         });
 
         EventManager.instance.OnRoundEnd.AddListener(RoundEnded);
+
+        //Added OnRoundStartWarning listener
+        EventManager.instance.OnRoundStartWarning.AddListener((i)=> {
+            RoundStartWarning(i);
+        });
+
+        //Added OnRoundEndWarning listener
+        EventManager.instance.OnRoundEndWarning.AddListener((b) => {
+            RoundEndWarning(b);
+        });
     }
 
-   
+    
 
 
     //
@@ -92,10 +104,6 @@ public class SoundManager : MonoBehaviour {
     }
 
     //CoPilot round indicator
-    public void AlmostStarted()
-    {
-        CoPilot.PlayOneShot(_RoundAlmostStarted[Random.Range(0, _RoundAlmostStarted.Length)]);
-    }
     public void RoundStarted()
     {
         CoPilot.PlayOneShot(_RoundStarted[Random.Range(0, _RoundStarted.Length)]);
@@ -111,9 +119,29 @@ public class SoundManager : MonoBehaviour {
         CoPilot.PlayOneShot(_RoundEnded[Random.Range(0, _RoundEnded.Length)]);
     }
 
-    public void TenSecondsLeft()
+    //Called whenever the player should know the round is about to start
+    void RoundStartWarning(int clip){
+
+        //If the warning is the ten second warning play ten second sound
+        if(clip == 0)
+            CoPilot.PlayOneShot(_TenSecondsLeft[Random.Range(0, _TenSecondsLeft.Length)]);
+        else if(clip == 1)
+        {
+            //Play round about to start sound
+            CoPilot.PlayOneShot(_RoundAlmostStarted[Random.Range(0, _RoundAlmostStarted.Length)]);
+        }
+    }
+
+    //Called whenever the player should know the round is about to end
+    void RoundEndWarning(bool b)
     {
-        CoPilot.PlayOneShot(_TenSecondsLeft[Random.Range(0, _TenSecondsLeft.Length)]);
+        if (!b)
+        {
+            //Play first warning clip here
+        } else if (b)
+        {
+            //Play second warning clip here
+        }
     }
 
     public void DropPodIncoming()

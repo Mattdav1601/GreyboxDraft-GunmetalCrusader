@@ -13,13 +13,17 @@ public class EndRound : UnityEvent{
 }
 
 //Called every time an enemy dies
-public class EnemyDeath : UnityEvent
-{
-
+public class EnemyDeath : UnityEvent{
 }
 
 //Called when the player disconnects from a gun
-public class OnDisconnect : UnityEvent<GameObject>
+public class OnDisconnect : UnityEvent<GameObject>{
+}
+
+public class RoundStartWarning : UnityEvent<int>{
+}
+
+public class RoundEndWarning : UnityEvent<bool>
 {
 
 }
@@ -44,6 +48,8 @@ public class EventManager : MonoBehaviour
     public EndRound OnRoundEnd = new EndRound();
     public EnemyDeath OnEnemyDeath = new EnemyDeath();
     public OnDisconnect OnControllerDisconnect = new OnDisconnect();
+	public RoundStartWarning OnRoundStartWarning = new RoundStartWarning();
+    public RoundEndWarning OnRoundEndWarning = new RoundEndWarning();
 
     private void Awake()
     {
