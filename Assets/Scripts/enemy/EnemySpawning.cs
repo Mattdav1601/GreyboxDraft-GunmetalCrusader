@@ -36,6 +36,7 @@ public class EnemySpawning : MonoBehaviour {
 	void Start () {
         //On round begin or end start or stop spawning enemies
         EventManager.instance.OnRoundStart.AddListener((p) => {
+            AlterSpawnValues(p);
             isSpawning = true;
         });
         EventManager.instance.OnRoundEnd.AddListener(() =>

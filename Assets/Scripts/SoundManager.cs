@@ -24,6 +24,9 @@ public class SoundManager : MonoBehaviour {
     public AudioClip[] _RoundStarted;
     public AudioClip[] _RoundAlmostStarted;
     public AudioClip[] _RoundEnded;
+    public AudioClip[] _DropPodIncoming;
+    public AudioClip[] _StockUpHint;
+    public AudioClip[] _PlayeResupplied;
 
         // weapons related
    
@@ -32,8 +35,8 @@ public class SoundManager : MonoBehaviour {
 
     public AudioClip[] _LeftWeaponEmpty;
     public AudioClip[] _RightWeaponEmpty;
-    public AudioClip[] _LeftAmmunitionDry;
-    public AudioClip[] _RightAmmunitionDry;
+    public AudioClip[] _BothWeaponEmpty;
+    public AudioClip[] _TriedFiringWhileWeaponEmpty;
 
     public AudioClip[] _AllWeaponsOutOfAmmo;
 
@@ -46,7 +49,7 @@ public class SoundManager : MonoBehaviour {
     public AudioClip[] _TakingDamage;
 
         //startup
-    public AudioClip _WelcomePilot;
+    public AudioClip[] _WelcomePilot;
 
         // Warnings
 
@@ -68,6 +71,11 @@ public class SoundManager : MonoBehaviour {
     void Start()
     {
         Invoke("Welcome", 2);
+        EventManager.instance.OnRoundStart.AddListener((p) => {
+            RoundStarted();
+        });
+
+        EventManager.instance.OnRoundEnd.AddListener(RoundEnded);
     }
 
    
@@ -80,7 +88,7 @@ public class SoundManager : MonoBehaviour {
 
     void Welcome()
     {
-        CoPilot.PlayOneShot(_WelcomePilot);
+        CoPilot.PlayOneShot(_WelcomePilot[Random.Range(0, _WelcomePilot.Length)]);
     }
 
     //CoPilot round indicator
@@ -106,6 +114,22 @@ public class SoundManager : MonoBehaviour {
     public void TenSecondsLeft()
     {
         CoPilot.PlayOneShot(_TenSecondsLeft[Random.Range(0, _TenSecondsLeft.Length)]);
+    }
+
+    public void DropPodIncoming()
+    {
+        CoPilot.PlayOneShot(_DropPodIncoming[Random.Range(0, _DropPodIncoming.Length)]);
+    }
+
+
+    public void WeShouldStockUp()
+    {
+        CoPilot.PlayOneShot(_StockUpHint[Random.Range(0, _StockUpHint.Length)]);
+    }
+
+    public void ReSupplied()
+    {
+        CoPilot.PlayOneShot(_PlayeResupplied[Random.Range(0, _PlayeResupplied.Length)]);
     }
 
    //booster CoPilot
@@ -135,16 +159,27 @@ public class SoundManager : MonoBehaviour {
         CoPilot.PlayOneShot(_RightWeaponEmpty[Random.Range(0, _RightWeaponEmpty.Length)]);
     }
 
-    public void RightAmmunitionDry()
+    public void BothWeaponsEmpty()
     {
-        CoPilot.PlayOneShot( _RightAmmunitionDry[Random.Range(0, _RightAmmunitionDry.Length)]);
+        CoPilot.PlayOneShot(_BothWeaponEmpty[Random.Range(0, _BothWeaponEmpty.Length)]);
     }
 
-    public void LeftAmmunitionDry()
+    public void FailedFireEmptyWeapon()
     {
-        CoPilot.PlayOneShot(_LeftAmmunitionDry[Random.Range(0, _LeftAmmunitionDry.Length)]);
+        CoPilot.PlayOneShot(_TriedFiringWhileWeaponEmpty[Random.Range(0, _TriedFiringWhileWeaponEmpty.Length)]);
     }
 
+    public void Reloading()
+    {
+        CoPilot.PlayOneShot(_Reloading[Random.Range(0, _Reloading.Length)]);
+    }
+
+    public void ReloadFinished()
+    {
+        CoPilot.PlayOneShot(_WeaponReloaded[Random.Range(0, _WeaponReloaded.Length)]);
+    }
+
+   
     //health damage copilot warnings
 
     public void TakingDamage()
