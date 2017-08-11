@@ -46,6 +46,12 @@ public class WeaponReload : UnityEvent<int>
 
 }
 
+//Called when the player presses the trigger
+public class ReloadComplete : UnityEvent<int>
+{
+
+}
+
 //Called when the player is out of ammo
 public class OutOfAmmo : UnityEvent<int>
 {
@@ -56,6 +62,11 @@ public class OutOfAmmo : UnityEvent<int>
 public class OutOfClips : UnityEvent<int>
 {
 
+}
+
+//called when the player attempts to reload
+public class AttemptFireWhileDepleted : UnityEvent<int>
+{
 }
 
 //called when the player attempts to reload
@@ -89,8 +100,10 @@ public class EventManager : MonoBehaviour
     public RoundEndWarning OnRoundEndWarning = new RoundEndWarning();
 	public WeaponFire OnWeaponFire = new WeaponFire();
 	public WeaponFire OnWeaponReload = new WeaponReload();
+	public WeaponFire OnReloadComplete = new ReloadComplete();
 	public OutOfAmmo OnOutOfAmmo = new OutOfAmmo();
 	public OutOfClips OnOutOfClips = new OutOfClips();
+	public AttemptFireWhileDepleted OnAttemptFireWhileDepleted = new AttemptFireWhileDepleted();
     public ReloadAttempt OnReloadAttempt = new ReloadAttempt();
 
     private void Awake()

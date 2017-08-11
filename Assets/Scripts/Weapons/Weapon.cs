@@ -150,6 +150,8 @@ public class Weapon : MonoBehaviour {
 			DoFire ();
 		} else {
 			isFiring = false;
+			if(ammoCount <= 0)
+				EventManager.instance.OnAttemptFireWhileDepleted.Invoke(sideIndex);
 		}
 	}
 
@@ -178,10 +180,13 @@ public class Weapon : MonoBehaviour {
 	 * TakeFireInput is called when OnWeaponReload is called
 	 */
 	void DoReload(int i){
-		if (i == sideIndex && clipCount > 0) {
-			ammoCount = 0;
-			reloadTimer = maxReloadTime;
-			isReloading = true;
+		if (i == sideIndex) {
+			if (clipCount > 0) {
+				ammoCount = 0;
+				reloadTimer = maxReloadTime;
+				isReloading = true;
+			}
+			EventManager.instance.OnReloadAttempt.Invoke(clipCount > 0);
 		}
 	}
 
@@ -193,6 +198,7 @@ public class Weapon : MonoBehaviour {
 			isReloading = false;
 			ammoCount = maxAmmoCount;
 			clipCount -= 1;
+			EventManager.instance.OnReloadComplete.Invoke (sideIndex);
 		}
 	}
 }
