@@ -11,10 +11,11 @@ public class MechInteraction : MonoBehaviour {
     Vector2 newCoords = new Vector2(0, 0);
 
     bool swipeUpSuccess;
+    bool updateCoords = false;
 
-    float minimumSwipeDistance = 0.3f;
+    float minimumSwipeDistance = 0.2f;
 
-    float oldCoordUpdateTime = 0.2f;
+    public float oldCoordUpdateTime = 0.5f;
     float oldCoordUpdateTimer;
 
 	// Use this for initialization
@@ -33,42 +34,42 @@ public class MechInteraction : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
         oldCoordUpdateTimer -= Time.deltaTime;
 
-        //Reset timer
-        if(oldCoordUpdateTimer <= 0)
+        if(oldCoordUpdateTimer < 0)
         {
-            oldCoordUpdateTimer = oldCoordUpdateTime;
-        }
-
-        //Clean up
-        if(swipeUpSuccess)
-        {
-            swipeUpSuccess = false;
+            updateCoords = true;
+            oldCoordUpdateTimer = 0.5f;
+            print(oldCoordUpdateTimer);
         }
     }
 
     private void DoTouchpadAxisChanged(object sender, ControllerInteractionEventArgs e)
     {
-        //Update the old coords if a certain time has passed
-        if(oldCoordUpdateTimer <= 0)
+        //Update the coordinates
+        if (updateCoords)
         {
             oldCoords = e.touchpadAxis;
+            updateCoords = false;
         }
 
-        //Update the new coords
+        //Do something with the new coords
         newCoords = e.touchpadAxis;
 
-        float delta = newCoords.x - oldCoords.x;
+        float delta = newCoords.y - oldCoords.y;
 
-        if(Mathf.Abs(delta) > minimumSwipeDistance)
+        print(delta);
+
+        if (Mathf.Abs(delta) > 0.8f)
         {
-            if(delta < 0)
+            if (delta < 0)
             {
                 EventManager.instance.OnControllerDisconnect.Invoke(this.gameObject);
-            } else if(delta > 0)
+            }
+            else if (delta > 0)
             {
-                swipeUpSuccess = true;
+                EventManager
             }
         }
     }
@@ -79,6 +80,7 @@ public class MechInteraction : MonoBehaviour {
         {
             if (swipeUpSuccess)
             {
+                swipeUpSuccess = false;
                 other.GetComponent<GunPuller>().OnSwipeUp(this.gameObject);
             }
         }

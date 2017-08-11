@@ -16,6 +16,12 @@ public class EndRound : UnityEvent{
 public class EnemyDeath : UnityEvent{
 }
 
+
+public class ControllerConnect : UnityEvent<GameObject>
+{
+
+}
+
 //Called when the player disconnects from a gun
 public class OnDisconnect : UnityEvent<GameObject>{
 }
@@ -26,6 +32,16 @@ public class RoundStartWarning : UnityEvent<int>{
 public class RoundEndWarning : UnityEvent<bool>
 {
 
+}
+//Called when the player is out of ammo
+public class OutOfAmmo : UnityEvent<int>
+{
+
+}
+
+//called when the player attempts to reload
+public class ReloadAttempt : UnityEvent<bool>
+{
 }
 
 public class EventManager : MonoBehaviour
@@ -44,12 +60,15 @@ public class EventManager : MonoBehaviour
         }
     }
 
+    //Events
     public StartRound OnRoundStart = new StartRound();
     public EndRound OnRoundEnd = new EndRound();
     public EnemyDeath OnEnemyDeath = new EnemyDeath();
     public OnDisconnect OnControllerDisconnect = new OnDisconnect();
 	public RoundStartWarning OnRoundStartWarning = new RoundStartWarning();
     public RoundEndWarning OnRoundEndWarning = new RoundEndWarning();
+    public OutOfAmmo OnOutOfAmmo = new OutOfAmmo();
+    public ReloadAttempt OnReloadAttempt = new ReloadAttempt();
 
     private void Awake()
     {

@@ -88,6 +88,14 @@ public class SoundManager : MonoBehaviour {
         EventManager.instance.OnRoundEndWarning.AddListener((b) => {
             RoundEndWarning(b);
         });
+
+        EventManager.instance.OnOutOfAmmo.AddListener((i) => {
+            OutOfAmmoWarning(i);
+        });
+
+        EventManager.instance.OnReloadAttempt.AddListener((b)=>{
+            ReloadWarning(b);
+        });
     }
 
     
@@ -192,6 +200,22 @@ public class SoundManager : MonoBehaviour {
         CoPilot.PlayOneShot(_BothWeaponEmpty[Random.Range(0, _BothWeaponEmpty.Length)]);
     }
 
+    void OutOfAmmoWarning(int i)
+    {
+        switch (i)
+        {
+            case 0:
+                //Left ammo warning
+                break;
+            case 1:
+                //Right ammo warning
+                break;
+            case 2:
+                //both ammo warning
+                break;
+        }
+    }
+
     public void FailedFireEmptyWeapon()
     {
         CoPilot.PlayOneShot(_TriedFiringWhileWeaponEmpty[Random.Range(0, _TriedFiringWhileWeaponEmpty.Length)]);
@@ -205,6 +229,18 @@ public class SoundManager : MonoBehaviour {
     public void ReloadFinished()
     {
         CoPilot.PlayOneShot(_WeaponReloaded[Random.Range(0, _WeaponReloaded.Length)]);
+    }
+
+    //When the player tries to reload. True is for when the player is able to, false is unable
+    void ReloadWarning(bool b)
+    {
+        if (b)
+        {
+            //Play can reload
+        } else if (!b)
+        {
+            //Play cannot reload
+        }
     }
 
    
