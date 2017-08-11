@@ -33,8 +33,27 @@ public class RoundEndWarning : UnityEvent<bool>
 {
 
 }
+
+//Called when the player presses the trigger
+public class WeaponFire : UnityEvent<OnWeaponFirePacket>
+{
+
+}
+
+//Called when the player presses the trigger
+public class WeaponReload : UnityEvent<int>
+{
+
+}
+
 //Called when the player is out of ammo
 public class OutOfAmmo : UnityEvent<int>
+{
+
+}
+
+//Called when the player is out of ammo
+public class OutOfClips : UnityEvent<int>
 {
 
 }
@@ -68,7 +87,10 @@ public class EventManager : MonoBehaviour
     public OnDisconnect OnControllerDisconnect = new OnDisconnect();
 	public RoundStartWarning OnRoundStartWarning = new RoundStartWarning();
     public RoundEndWarning OnRoundEndWarning = new RoundEndWarning();
-    public OutOfAmmo OnOutOfAmmo = new OutOfAmmo();
+	public WeaponFire OnWeaponFire = new WeaponFire();
+	public WeaponFire OnWeaponReload = new WeaponReload();
+	public OutOfAmmo OnOutOfAmmo = new OutOfAmmo();
+	public OutOfClips OnOutOfClips = new OutOfClips();
     public ReloadAttempt OnReloadAttempt = new ReloadAttempt();
 
     private void Awake()
