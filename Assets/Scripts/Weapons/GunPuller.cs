@@ -16,6 +16,17 @@ public class GunPuller : VRTK_InteractableObject {
 
     public bool AlreadySpawned = false;
 
+
+    void Start()
+    {
+        EventManager.instance.OnControllerConnect.AddListener((p, o)=> {
+            if(p == this.gameObject)
+            {
+                OnSwipeUp(o);
+            }
+        });
+    }
+
     public override void StartUsing(GameObject usingObject)
     {
         if (!AlreadySpawned)

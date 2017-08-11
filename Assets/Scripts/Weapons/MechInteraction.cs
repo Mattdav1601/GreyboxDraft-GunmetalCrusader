@@ -18,6 +18,9 @@ public class MechInteraction : MonoBehaviour {
     public float oldCoordUpdateTime = 0.5f;
     float oldCoordUpdateTimer;
 
+    GameObject puller;
+    VRTK_InteractTouch iTouch;
+
 	// Use this for initialization
 	void Start () {
         //Check for errors
@@ -26,7 +29,7 @@ public class MechInteraction : MonoBehaviour {
             Debug.LogError("The mech interaction script is not on a contoller with the VRTK_ControllerEvents script!");
             return;
         }
-
+        iTouch = GetComponent<VRTK_InteractTouch>();
         oldCoordUpdateTime = oldCoordUpdateTimer;
 
         GetComponent<VRTK_ControllerEvents>().TouchpadAxisChanged += new ControllerInteractionEventHandler(DoTouchpadAxisChanged);
@@ -40,8 +43,7 @@ public class MechInteraction : MonoBehaviour {
         if(oldCoordUpdateTimer < 0)
         {
             updateCoords = true;
-            oldCoordUpdateTimer = 0.5f;
-            print(oldCoordUpdateTimer);
+            oldCoordUpdateTimer = 0.8f;
         }
     }
 
@@ -59,9 +61,7 @@ public class MechInteraction : MonoBehaviour {
 
         float delta = newCoords.y - oldCoords.y;
 
-        print(delta);
-
-        if (Mathf.Abs(delta) > 0.8f)
+        if (Mathf.Abs(delta) > 0.9f)
         {
             if (delta < 0)
             {
@@ -69,19 +69,12 @@ public class MechInteraction : MonoBehaviour {
             }
             else if (delta > 0)
             {
-                EventManager.instance.OnControllerConnect.Invoke(this.gameObject);
-            }
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if(other.tag == "InteractableMechElement")
-        {
-            if (swipeUpSuccess)
-            {
-                swipeUpSuccess = false;
-                other.GetComponent<GunPuller>().OnSwipeUp(this.gameObject);
+                if (iTouch.GetTouchedObject())
+                {
+                    if(iTouch.GetTouchedObject().gameObject.tag == "MechComponent")
+                        EventManager.instance.OnControllerConnect.Invoke(iTouch.GetTouchedObject(), this.gameObject);
+                }
+                
             }
         }
     }

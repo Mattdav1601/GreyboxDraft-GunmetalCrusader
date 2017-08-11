@@ -17,7 +17,7 @@ public class EnemyDeath : UnityEvent{
 }
 
 
-public class ControllerConnect : UnityEvent<GameObject>
+public class ControllerConnect : UnityEvent<GameObject, GameObject>
 {
 
 }
