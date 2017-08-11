@@ -64,6 +64,7 @@ public class EventManager : MonoBehaviour
     public StartRound OnRoundStart = new StartRound();
     public EndRound OnRoundEnd = new EndRound();
     public EnemyDeath OnEnemyDeath = new EnemyDeath();
+    public ControllerConnect OnControllerConnect = new ControllerConnect();
     public OnDisconnect OnControllerDisconnect = new OnDisconnect();
 	public RoundStartWarning OnRoundStartWarning = new RoundStartWarning();
     public RoundEndWarning OnRoundEndWarning = new RoundEndWarning();

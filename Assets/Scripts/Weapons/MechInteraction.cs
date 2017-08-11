@@ -69,7 +69,7 @@ public class MechInteraction : MonoBehaviour {
             }
             else if (delta > 0)
             {
-                EventManager
+                EventManager.instance.OnControllerConnect.Invoke(this.gameObject);
             }
         }
     }
