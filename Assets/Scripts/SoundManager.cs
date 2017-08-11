@@ -40,6 +40,7 @@ public class SoundManager : MonoBehaviour {
     public AudioClip[] _TriedFiringWhileWeaponEmpty;
 
     public AudioClip[] _AllWeaponsOutOfAmmo;
+    public AudioClip[] _NoBackupAmmunition;
 
         // booster related
     public AudioClip[] _BoostingRocketsEngaged;
@@ -101,9 +102,7 @@ public class SoundManager : MonoBehaviour {
     
 
 
-    //
-    //
-    //
+  
     //Copilot voice sounds.
 
     void Welcome()
@@ -146,22 +145,15 @@ public class SoundManager : MonoBehaviour {
         if (!b)
         {
             //Play first warning clip here
+            CoPilot.PlayOneShot(_DropPodIncoming[Random.Range(0, _DropPodIncoming.Length)]);
         } else if (b)
         {
             //Play second warning clip here
+            CoPilot.PlayOneShot(_StockUpHint[Random.Range(0, _StockUpHint.Length)]);
         }
     }
 
-    public void DropPodIncoming()
-    {
-        CoPilot.PlayOneShot(_DropPodIncoming[Random.Range(0, _DropPodIncoming.Length)]);
-    }
 
-
-    public void WeShouldStockUp()
-    {
-        CoPilot.PlayOneShot(_StockUpHint[Random.Range(0, _StockUpHint.Length)]);
-    }
 
     public void ReSupplied()
     {
@@ -184,34 +176,24 @@ public class SoundManager : MonoBehaviour {
         CoPilot.PlayOneShot(_BoostCancelled[Random.Range(0, _BoostCancelled.Length)]);
     }
 
-    // weapon reloading copilot
-    public void LeftWeaponEmpty()
-    {
-        CoPilot.PlayOneShot(_LeftWeaponEmpty[Random.Range(0, _LeftWeaponEmpty.Length)]);
-    }
-
-    public void RightWeaponEmpty()
-    {
-        CoPilot.PlayOneShot(_RightWeaponEmpty[Random.Range(0, _RightWeaponEmpty.Length)]);
-    }
-
-    public void BothWeaponsEmpty()
-    {
-        CoPilot.PlayOneShot(_BothWeaponEmpty[Random.Range(0, _BothWeaponEmpty.Length)]);
-    }
-
+  
     void OutOfAmmoWarning(int i)
     {
         switch (i)
         {
             case 0:
                 //Left ammo warning
+                CoPilot.PlayOneShot(_LeftWeaponEmpty[Random.Range(0, _LeftWeaponEmpty.Length)]);
+
                 break;
             case 1:
                 //Right ammo warning
+                CoPilot.PlayOneShot(_RightWeaponEmpty[Random.Range(0, _RightWeaponEmpty.Length)]);
+
                 break;
             case 2:
                 //both ammo warning
+                CoPilot.PlayOneShot(_BothWeaponEmpty[Random.Range(0, _BothWeaponEmpty.Length)]);
                 break;
         }
     }
@@ -221,10 +203,7 @@ public class SoundManager : MonoBehaviour {
         CoPilot.PlayOneShot(_TriedFiringWhileWeaponEmpty[Random.Range(0, _TriedFiringWhileWeaponEmpty.Length)]);
     }
 
-    public void Reloading()
-    {
-        CoPilot.PlayOneShot(_Reloading[Random.Range(0, _Reloading.Length)]);
-    }
+    
 
     public void ReloadFinished()
     {
@@ -237,9 +216,11 @@ public class SoundManager : MonoBehaviour {
         if (b)
         {
             //Play can reload
+            CoPilot.PlayOneShot(_Reloading[Random.Range(0, _Reloading.Length)]);
         } else if (!b)
         {
             //Play cannot reload
+            CoPilot.PlayOneShot(_NoBackupAmmunition[Random.Range(0, _NoBackupAmmunition.Length)]);
         }
     }
 
@@ -254,9 +235,7 @@ public class SoundManager : MonoBehaviour {
 
 
 
-    //
-    //
-    //
+ 
     //Mech sounds
 
     public void Boosting()
