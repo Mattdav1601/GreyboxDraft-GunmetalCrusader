@@ -13,9 +13,9 @@ public class HUD_EnemyCount : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        int num = 0;
+        int num = 0;/*
         foreach (Enemy e in FindObjectsOfType<Enemy>())
             num++;
-        t.text = num.ToString();
+        t.text = num.ToString();*/
     }
 }

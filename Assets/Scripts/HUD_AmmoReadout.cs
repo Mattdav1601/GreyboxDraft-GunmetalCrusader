@@ -17,11 +17,11 @@ public class HUD_AmmoReadout : MonoBehaviour {
     void Update()
     {
         string ammo = "00/0";
-        foreach (MechaWeaponBehaviour m in FindObjectsOfType<MechaWeaponBehaviour>())
+        /*foreach (MechaWeaponBehaviour m in FindObjectsOfType<MechaWeaponBehaviour>())
         {
             if (m.ActiveSide == externalInterface.ActiveSide)
                 ammo = m.GetAmmoString();
-        }
+        }*/
         t.text = ammo.ToString();
     }
 }
