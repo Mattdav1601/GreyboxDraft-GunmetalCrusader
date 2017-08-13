@@ -99,8 +99,8 @@ public class EventManager : MonoBehaviour
 	public RoundStartWarning OnRoundStartWarning = new RoundStartWarning();
     public RoundEndWarning OnRoundEndWarning = new RoundEndWarning();
 	public WeaponFire OnWeaponFire = new WeaponFire();
-	public WeaponFire OnWeaponReload = new WeaponReload();
-	public WeaponFire OnReloadComplete = new ReloadComplete();
+	public WeaponReload OnWeaponReload = new WeaponReload();
+	public ReloadComplete OnReloadComplete = new ReloadComplete();
 	public OutOfAmmo OnOutOfAmmo = new OutOfAmmo();
 	public OutOfClips OnOutOfClips = new OutOfClips();
 	public AttemptFireWhileDepleted OnAttemptFireWhileDepleted = new AttemptFireWhileDepleted();

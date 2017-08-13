@@ -7,8 +7,7 @@ public class Weapon : MonoBehaviour {
 	/* Dakota's hekkin checkulisto
 	 * Firing Functionality (Spawn an actor while firing that does stuff)
 	 * Crit Modifier/Splash Damage/Penetration ;)
-	 * Firing Effects (Support for multiple muzzles)
-	 * NO EXTERNAL REFERENCES OUTSIDE THE PREFAB!!!!!! Needed for weapon switching
+	 * Firing Effects
 	 * */
 
 	// Stores which side of the mech this weapon is on. 0 = Left, 1 = Right. Any others will be completely inactive.
@@ -82,23 +81,31 @@ public class Weapon : MonoBehaviour {
 	[SerializeField]
 	private float recoilTime = 1.0f;
 
-	// The amount of time (in seconds) before the volley resets and recoil begins calculating from the start.
-	[Tooltip("Used exclusively for shotguns/flak guns. Determines how many times to run the projectile spawn action.")]
+    // The amount of time (in seconds) remaining until the volley resets.
+    private float recoilTimer = 0.0f;
+
+    // The amount of time (in seconds) before the volley resets and recoil begins calculating from the start.
+    [Tooltip("Used exclusively for shotguns/flak guns. Determines how many times to run the projectile spawn action.")]
 	[SerializeField]
 	private int projectilesPerShot = 1;
 
-	// Stores which side of the mech this weapon is on. 0 = Left, 1 = Right. Any others will be completely inactive.
-	[Tooltip("Stores which side of the mech this weapon is on. 0 = Left, 1 = Right. Any others will be completely inactive.")]
+    // Array of Locations and Rotations that bullets will be spawned from.
+    [Tooltip("Array of Locations and Rotations that bullets will be spawned from.")]
 	[SerializeField]
-	private Transform muzzleTransform = 0;
+	private Transform[] muzzleTransform;
 
-	// The amount of time (in seconds) remaining until the volley resets.
-	private float recoilTimer = 0.0f;
+    // The current muzzle we should fire a shot from.
+    private int currentMuzzle = 0;
 
-	/*
-	 * Called once per frame.
+    // The prefab that gets instantiated when the weapon is fired.
+    [Tooltip("The prefab that gets instantiated when the weapon is fired.")]
+    [SerializeField]
+    private GameObject firedObject;
+
+    /*
+	 * Called on instance create
 	 */
-	void Start(){
+    void Start(){
 		// Bind Events
 		EventManager.instance.OnWeaponFire.AddListener((wfp) => {
 			TakeFireInput(wfp);
@@ -128,10 +135,8 @@ public class Weapon : MonoBehaviour {
 		// Decrement the reloadTimer
 		reloadTimer -= Time.deltaTime;
 
-		// Decrement the recoilTimer
-		recoilTimer -= Time.deltaTime;
-		if (recoilTimer <= 0.0f)
-			volleyLength = 0;
+        // Decrement the recoilTimer
+        resetVolley();
 	}
 
 	/*
@@ -168,12 +173,13 @@ public class Weapon : MonoBehaviour {
 	 * Called from CheckFire when we can and are firing the weapon.
 	 */
 	void DoFire(){
-		for(int i = 0; i < projectilesPerShot; i++) // For Shotguns, fire more than one
-			Debug.Log ("BANGU BANGU with spread of" + CalcSpreadAmount().ToString()); // TODO: Do fire here
-		fireTimer = fireInterval;
+        for (int i = 0; i < projectilesPerShot; i++) // For Shotguns, fire more than one
+            Instantiate(firedObject, muzzleTransform[currentMuzzle]);
+        currentMuzzle = nextMuzzle();
+        fireTimer = fireInterval;
 		isFiring = autoRefire;
-		volleyLength = Mathf.Clamp(volleyLength + 1, 0, maxVolleyLength);
-		recoilTimer = recoilTime;
+        incrementVolley();
+        modifyAmmo(-1);
 	}
 
 	/*
@@ -182,11 +188,13 @@ public class Weapon : MonoBehaviour {
 	void DoReload(int i){
 		if (i == sideIndex) {
 			if (clipCount > 0) {
-				ammoCount = 0;
+                modifyAmmo(-maxAmmoCount);
 				reloadTimer = maxReloadTime;
 				isReloading = true;
 			}
-			EventManager.instance.OnReloadAttempt.Invoke(clipCount > 0);
+
+            // Tell the event manager we have begun reloading this weapon.
+            EventManager.instance.OnReloadAttempt.Invoke(clipCount > 0);
 		}
 	}
 
@@ -196,9 +204,84 @@ public class Weapon : MonoBehaviour {
 	void CheckReloadDone(){
 		if (isReloading && reloadTimer <= 0) {
 			isReloading = false;
-			ammoCount = maxAmmoCount;
-			clipCount -= 1;
-			EventManager.instance.OnReloadComplete.Invoke (sideIndex);
+            fillAmmo();
+            modifyClips(-1);
+            resetMuzzle();
+
+            // Tell the event manager we have finished reloading this weapon
+            EventManager.instance.OnReloadComplete.Invoke (sideIndex);
 		}
 	}
+
+    /*
+     * Called after firing to increment the muzzle index.
+     */
+    int nextMuzzle()
+    {
+        int newMuzz = currentMuzzle + 1;
+        // Overflow the muzzle index
+        if (newMuzz > muzzleTransform.Length)
+            newMuzz = 0;
+
+        return newMuzz;
+    }
+
+    /*
+     * Resets the muzzle index to zero.
+     */
+    void resetMuzzle()
+    {
+        currentMuzzle = 0;
+    }
+
+    /*
+     * Used to add or subtract ammo.
+     */
+    void modifyAmmo(int amnt)
+    {
+        ammoCount = Mathf.Clamp(ammoCount + amnt, 0, maxAmmoCount);
+    }
+
+    /*
+     * Maxes out ammo count.
+     */
+    void fillAmmo()
+    {
+        ammoCount = maxAmmoCount;
+    }
+
+    /*
+     * Used to add or subtract clips.
+     */
+    void modifyClips(int amnt)
+    {
+        clipCount = Mathf.Clamp(clipCount + amnt, 0, maxClipCount);
+    }
+
+    /*
+     * Maxes out clip count.
+     */
+    void fillClips()
+    {
+        clipCount = maxClipCount;
+    }
+
+    /*
+     * Adds to our volley length and resets the recoil timer
+     */
+    void incrementVolley()
+    {
+        volleyLength = Mathf.Clamp(volleyLength + 1, 0, maxVolleyLength);
+        recoilTimer = recoilTime;
+    }
+
+    /*
+     * Reset our volley after the cool down
+     */
+    void resetVolley ()
+    {
+        recoilTimer -= Time.deltaTime;
+        if (recoilTimer <= 0.0f)
+            volleyLength = 0;
+    }
 }
