@@ -16,6 +16,11 @@ public class FiredProjectile : FiredObject {
     [SerializeField]
     protected float moveSpeed = 3.0f;
 
+    // How far does this projectile move every second?
+    [Tooltip("How far does this projectile rotate every second?")]
+    [SerializeField]
+    protected float rotateSpeed = 0.25f;
+
     private Rigidbody rb;
 
     /*
@@ -27,6 +32,7 @@ public class FiredProjectile : FiredObject {
 
         rb = this.GetComponent<Rigidbody>();
         this.GetComponent<Collider>().isTrigger = true;
+        this.GetComponent<Rigidbody>().isKinematic = true;
     }
 
     /*
@@ -34,6 +40,7 @@ public class FiredProjectile : FiredObject {
 	 */
     protected override void Update () {
         rb.transform.Translate(this.transform.forward * (moveSpeed * Time.deltaTime));
+        this.transform.eulerAngles = this.transform.eulerAngles + new Vector3(0,0, (rotateSpeed * Time.deltaTime));
 	}
 
     /*

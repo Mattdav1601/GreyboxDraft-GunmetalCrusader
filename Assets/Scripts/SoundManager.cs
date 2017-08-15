@@ -90,13 +90,20 @@ public class SoundManager : MonoBehaviour {
             RoundEndWarning(b);
         });
 
-        EventManager.instance.OnOutOfAmmo.AddListener((i) => {
+        //Should be played when the player is out of ammunitions
+        //the integer passed, i, represents which weapon is out of ammo
+        //bool b if false, the player is out of ammo, if true, the player is out of clips
+        EventManager.instance.OnOutOfAmmunition.AddListener((i, b) => {
             OutOfAmmoWarning(i);
         });
+
+        EventManager.instance.OnAttemptFireWhileDepleted.AddListener(FailedFireEmptyWeapon);
 
         EventManager.instance.OnReloadAttempt.AddListener((b)=>{
             ReloadWarning(b);
         });
+
+        EventManager.instance.OnReloadComplete.AddListener(ReloadFinished);
     }
 
     
@@ -127,12 +134,12 @@ public class SoundManager : MonoBehaviour {
     }
 
     //Called whenever the player should know the round is about to start
-    void RoundStartWarning(int clip){
+    void RoundStartWarning(bool b){
 
         //If the warning is the ten second warning play ten second sound
-        if(clip == 0)
+        if(!b)
             CoPilot.PlayOneShot(_TenSecondsLeft[Random.Range(0, _TenSecondsLeft.Length)]);
-        else if(clip == 1)
+        else if(b)
         {
             //Play round about to start sound
             CoPilot.PlayOneShot(_RoundAlmostStarted[Random.Range(0, _RoundAlmostStarted.Length)]);
@@ -166,10 +173,10 @@ public class SoundManager : MonoBehaviour {
         CoPilot.PlayOneShot(_BoostingRocketsEngaged[Random.Range(0,_BoostingRocketsEngaged.Length)]);
     }
 
-    public void CoordinatesInvalid()
-    {
-        CoPilot.PlayOneShot(_InvalidLocation[Random.Range(0, _InvalidLocation.Length)]);
-    }
+    //public void CoordinatesInvalid()
+    //{
+    //    CoPilot.PlayOneShot(_InvalidLocation[Random.Range(0, _InvalidLocation.Length)]);
+    //}
 
     public void BoostCancelled()
     {
@@ -198,13 +205,14 @@ public class SoundManager : MonoBehaviour {
         }
     }
 
+    //done
     public void FailedFireEmptyWeapon()
     {
         CoPilot.PlayOneShot(_TriedFiringWhileWeaponEmpty[Random.Range(0, _TriedFiringWhileWeaponEmpty.Length)]);
     }
 
     
-
+    //done
     public void ReloadFinished()
     {
         CoPilot.PlayOneShot(_WeaponReloaded[Random.Range(0, _WeaponReloaded.Length)]);

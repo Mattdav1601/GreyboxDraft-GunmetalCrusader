@@ -13,7 +13,7 @@ public class Weapon : MonoBehaviour {
 	// Stores which side of the mech this weapon is on. 0 = Left, 1 = Right. Any others will be completely inactive.
 	[Tooltip("Stores which side of the mech this weapon is on. 0 = Left, 1 = Right. Any others will be completely inactive.")]
 	[SerializeField]
-	private int sideIndex = 0;
+	public int sideIndex = 0;
 
 	// Holds the amount of time (in seconds) until the weapon can be fired again after each shot.
 	[Tooltip("Holds the amount of time (in seconds) until the weapon can be fired again after each shot.")]
@@ -92,7 +92,7 @@ public class Weapon : MonoBehaviour {
     // Array of Locations and Rotations that bullets will be spawned from.
     [Tooltip("Array of Locations and Rotations that bullets will be spawned from.")]
 	[SerializeField]
-	private Transform[] muzzleTransform;
+	private GameObject[] muzzles;
 
     // The current muzzle we should fire a shot from.
     private int currentMuzzle = 0;
@@ -101,6 +101,21 @@ public class Weapon : MonoBehaviour {
     [Tooltip("The prefab that gets instantiated when the weapon is fired.")]
     [SerializeField]
     private GameObject firedObject;
+
+    // Holds a reference to the Legacy Animation system that drives the weapon.
+    [Tooltip("Holds a reference to the Legacy Animation system that drives the weapon.")]
+    [SerializeField]
+    private Animation weaponAnimation;
+
+    // The firing animation clip.
+    [Tooltip("The firing animation clip.")]
+    [SerializeField]
+    private AnimationClip fireAnim;
+
+    // The reloading animation clip.
+    [Tooltip("The reloading animation clip.")]
+    [SerializeField]
+    private AnimationClip reloadAnim;
 
     /*
 	 * Called on instance create
@@ -114,8 +129,12 @@ public class Weapon : MonoBehaviour {
 			TakeFireInput(i);
 		});
 
-		// Init ammo variables
-		ammoCount = maxAmmoCount;
+        // Bind Animations
+        weaponAnimation.AddClip(fireAnim, "Fire");
+        weaponAnimation.AddClip(reloadAnim, "Reload");
+
+        // Init ammo variables
+        ammoCount = maxAmmoCount;
 		clipCount = maxClipCount;
 	}
 
@@ -123,6 +142,11 @@ public class Weapon : MonoBehaviour {
 	 * Called once per frame.
 	 */
 	void Update(){
+        /*DEBUG*/
+        isFiring = Input.GetKey(KeyCode.Return);
+        if (Input.GetKeyDown(KeyCode.Backspace))
+            DoReload(this.sideIndex);
+
 		// Call CheckFire to...check the fire.
 		CheckFire ();
 
@@ -155,8 +179,8 @@ public class Weapon : MonoBehaviour {
 			DoFire ();
 		} else {
 			isFiring = false;
-			if(ammoCount <= 0)
-				EventManager.instance.OnAttemptFireWhileDepleted.Invoke(sideIndex);
+            if (ammoCount <= 0)
+                EventManager.instance.OnAttemptFireWhileDepleted.Invoke();
 		}
 	}
 
@@ -174,13 +198,16 @@ public class Weapon : MonoBehaviour {
 	 */
 	void DoFire(){
         for (int i = 0; i < projectilesPerShot; i++) // For Shotguns, fire more than one
-            Instantiate(firedObject, muzzleTransform[currentMuzzle]);
+            Instantiate(firedObject, muzzles[currentMuzzle].transform);
+        muzzles[currentMuzzle].GetComponent<ParticleSystem>().Play();
         currentMuzzle = nextMuzzle();
         fireTimer = fireInterval;
 		isFiring = autoRefire;
         incrementVolley();
         modifyAmmo(-1);
-	}
+
+        weaponAnimation.Play("Fire");
+    }
 
 	/*
 	 * TakeFireInput is called when OnWeaponReload is called
@@ -191,7 +218,8 @@ public class Weapon : MonoBehaviour {
                 modifyAmmo(-maxAmmoCount);
 				reloadTimer = maxReloadTime;
 				isReloading = true;
-			}
+                weaponAnimation.Play("Reload");
+            }
 
             // Tell the event manager we have begun reloading this weapon.
             EventManager.instance.OnReloadAttempt.Invoke(clipCount > 0);
@@ -209,7 +237,7 @@ public class Weapon : MonoBehaviour {
             resetMuzzle();
 
             // Tell the event manager we have finished reloading this weapon
-            EventManager.instance.OnReloadComplete.Invoke (sideIndex);
+            EventManager.instance.OnReloadComplete.Invoke();
 		}
 	}
 
@@ -220,7 +248,7 @@ public class Weapon : MonoBehaviour {
     {
         int newMuzz = currentMuzzle + 1;
         // Overflow the muzzle index
-        if (newMuzz > muzzleTransform.Length)
+        if (newMuzz > muzzles.Length - 1)
             newMuzz = 0;
 
         return newMuzz;

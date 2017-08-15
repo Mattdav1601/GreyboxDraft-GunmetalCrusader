@@ -26,7 +26,7 @@ public class ControllerConnect : UnityEvent<GameObject, GameObject>
 public class OnDisconnect : UnityEvent<GameObject>{
 }
 
-public class RoundStartWarning : UnityEvent<int>{
+public class RoundStartWarning : UnityEvent<bool>{
 }
 
 public class RoundEndWarning : UnityEvent<bool>
@@ -47,25 +47,19 @@ public class WeaponReload : UnityEvent<int>
 }
 
 //Called when the player presses the trigger
-public class ReloadComplete : UnityEvent<int>
+public class ReloadComplete : UnityEvent
 {
 
 }
 
 //Called when the player is out of ammo
-public class OutOfAmmo : UnityEvent<int>
-{
-
-}
-
-//Called when the player is out of ammo
-public class OutOfClips : UnityEvent<int>
+public class OutOfAmmunition : UnityEvent<int, bool>
 {
 
 }
 
 //called when the player attempts to reload
-public class AttemptFireWhileDepleted : UnityEvent<int>
+public class AttemptFireWhileDepleted : UnityEvent
 {
 }
 
@@ -101,8 +95,7 @@ public class EventManager : MonoBehaviour
 	public WeaponFire OnWeaponFire = new WeaponFire();
 	public WeaponReload OnWeaponReload = new WeaponReload();
 	public ReloadComplete OnReloadComplete = new ReloadComplete();
-	public OutOfAmmo OnOutOfAmmo = new OutOfAmmo();
-	public OutOfClips OnOutOfClips = new OutOfClips();
+    public OutOfAmmunition OnOutOfAmmunition = new OutOfAmmunition();
 	public AttemptFireWhileDepleted OnAttemptFireWhileDepleted = new AttemptFireWhileDepleted();
     public ReloadAttempt OnReloadAttempt = new ReloadAttempt();
 

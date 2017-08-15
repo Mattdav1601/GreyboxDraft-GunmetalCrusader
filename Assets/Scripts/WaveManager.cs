@@ -137,14 +137,14 @@ public class WaveManager : MonoBehaviour {
                 if(!playedTenSound && (int)roundCountdown == tenSecondWarningTimer)
                 {
                     playedTenSound = true;
-                    EventManager.instance.OnRoundStartWarning.Invoke(0);
+                    EventManager.instance.OnRoundStartWarning.Invoke(false);
                 }
 
                 //Same thing for second warning
                 if(!playedTwoSound && (int)roundCountdown == roundStartingWarningTimer)
                 {
                     playedTwoSound = true;
-                    EventManager.instance.OnRoundStartWarning.Invoke(1);
+                    EventManager.instance.OnRoundStartWarning.Invoke(true);
                 }
             }
         }      
