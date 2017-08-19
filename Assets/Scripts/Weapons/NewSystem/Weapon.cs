@@ -198,7 +198,7 @@ public class Weapon : MonoBehaviour {
 	 */
 	void DoFire(){
         for (int i = 0; i < projectilesPerShot; i++) // For Shotguns, fire more than one
-            Instantiate(firedObject, muzzles[currentMuzzle].transform);
+            Instantiate(firedObject, muzzles[currentMuzzle].transform.position, muzzles[currentMuzzle].transform.rotation);
         muzzles[currentMuzzle].GetComponent<ParticleSystem>().Play();
         currentMuzzle = nextMuzzle();
         fireTimer = fireInterval;

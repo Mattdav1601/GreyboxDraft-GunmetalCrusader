@@ -6,11 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class FiredProjectile : FiredObject {
 
-    // How long this shot survives for before garbage collection.
-    [Tooltip("How long this shot survives for before garbage collection.")]
-    [SerializeField]
-    private float lifeTime = 3.0f;
-
     // How far does this projectile move every second?
     [Tooltip("How far does this projectile move every second?")]
     [SerializeField]
@@ -57,6 +52,6 @@ public class FiredProjectile : FiredObject {
                     break;
                 }
         }
-        Destroy(other.gameObject);
+        Destroy(this.gameObject);
     }
 }

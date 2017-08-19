@@ -51,14 +51,14 @@ public class FiredObject : MonoBehaviour {
     // How long this shot survives for before garbage collection.
     [Tooltip("How long this shot survives for before garbage collection.")]
     [SerializeField]
-    private float lifeTime = 3.0f;
+    private float existTime = 3.0f;
 
     /*
      * Called on instance create
      */
     protected virtual void Start()
     {
-        Destroy(this.gameObject, lifeTime);
+        Destroy(this.gameObject, existTime);
     }
 
     /*
