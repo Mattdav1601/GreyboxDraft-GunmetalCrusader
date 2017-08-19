@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FiredObject : MonoBehaviour {
+public class FiredObject : WeaponEffect {
 
     // How much base damage an enemy takes from this shot.
     [Tooltip("How much base damage an enemy takes from this shot.")]
@@ -49,9 +49,9 @@ public class FiredObject : MonoBehaviour {
     */
 
     // How long this shot survives for before garbage collection.
-    [Tooltip("How long this shot survives for before garbage collection.")]
+    [Tooltip("The game object spawned where the bullet impacts.")]
     [SerializeField]
-    private float existTime = 3.0f;
+    protected GameObject impactEffect;
 
     /*
      * Called on instance create

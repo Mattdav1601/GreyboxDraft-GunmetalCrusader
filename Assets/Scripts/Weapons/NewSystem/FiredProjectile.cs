@@ -52,6 +52,8 @@ public class FiredProjectile : FiredObject {
                     break;
                 }
         }
+
+        Instantiate(impactEffect, this.transform.position, this.transform.rotation);
         Destroy(this.gameObject);
     }
 }
