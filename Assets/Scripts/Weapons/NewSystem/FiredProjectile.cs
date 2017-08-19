@@ -53,7 +53,7 @@ public class FiredProjectile : FiredObject {
                 }
         }
 
-        Instantiate(impactEffect, this.transform.position, this.transform.rotation);
+        Instantiate(impactEffect, this.transform.position, Quaternion.identity);
         Destroy(this.gameObject);
     }
 }

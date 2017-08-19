@@ -54,14 +54,6 @@ public class FiredObject : WeaponEffect {
     protected GameObject impactEffect;
 
     /*
-     * Called on instance create
-     */
-    protected virtual void Start()
-    {
-        Destroy(this.gameObject, existTime);
-    }
-
-    /*
      * Called once per frame.
      */
     protected virtual void Update() { }
