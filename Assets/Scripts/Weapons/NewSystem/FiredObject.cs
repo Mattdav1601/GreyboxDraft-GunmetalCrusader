@@ -14,23 +14,28 @@ public class FiredObject : WeaponEffect {
     [SerializeField]
     private int teamIndex = 0;
 
-    /*
-     * Comment block for unimplemented functionality. Effectively a TODO: list
-     * 
-    // How much baseDamage is multiplied by if this strikes a critical area on an enemy.
-    [Tooltip("How much baseDamage is multiplied by if this strikes a critical area on an enemy.")]
+    // Does this weapon cause Splash Damage?
+    [Tooltip("Does this weapon cause Splash Damage?")]
     [SerializeField]
-    private float critModifier = 2.0f;
+    private bool splashDamage = false;
 
     // How far away from the epicentre splash effects will take place.
     [Tooltip("How far away from the epicentre splash effects will take place.")]
     [SerializeField]
-    private float splashRadius = 4.0f;
+    private float innerSplashRadius = 4.0f, outerSplashRadius = 6.0f;
 
     // How much baseDamage is multiplied by if the enemy is only hit by the splash damage from this weapon.
     [Tooltip("How much baseDamage is multiplied by if the enemy is only hit by the splash damage from this weapon.")]
     [SerializeField]
-    private float splashModifier = 0.5f;
+    private float innerSplashModifier = 0.5f, outerSplashModifier = 0.1f;
+
+    /*
+     * Comment block for unimplemented functionality. Effectively a TODO: list
+     *
+    // How much baseDamage is multiplied by if this strikes a critical area on an enemy.
+    [Tooltip("How much baseDamage is multiplied by if this strikes a critical area on an enemy.")]
+    [SerializeField]
+    private float critModifier = 2.0f;
 
     // How much baseDamage is multiplied by if the enemy is only hit by the splash damage from this weapon.
     [Tooltip("Does this shot continue through enemies until it hits the terrain?")]
@@ -64,5 +69,29 @@ public class FiredObject : WeaponEffect {
     protected virtual void hitEnemy(GameObject e, float damageMod)
     {
         e.GetComponent<Enemy>().TakeDamage(baseDamage * damageMod);
+    }
+
+    /*
+     * Called when we have hit an enemy
+     */
+    protected virtual void splashEnemy(GameObject ignoreme, Vector3 loc)
+    {
+        if (splashDamage)
+        {
+            foreach (Enemy e in FindObjectsOfType<Enemy>())
+            {
+                if (e.gameObject == ignoreme)
+                    continue;
+
+                float dist = Vector3.Distance(loc, e.gameObject.transform.position);
+
+                if (dist < innerSplashRadius)
+                    hitEnemy(e.gameObject, innerSplashModifier);
+                else if (dist < outerSplashRadius)
+                    hitEnemy(e.gameObject, outerSplashModifier);
+                else
+                    continue;
+            }
+        }
     }
 }

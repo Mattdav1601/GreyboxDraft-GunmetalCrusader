@@ -42,8 +42,11 @@ public class FiredHitscan : FiredObject {
                     }
             }
             SpawnHitscanEffects(hit.point);
-        }else
+            splashEnemy(hit.collider.gameObject, this.transform.position);
+        }
+        else
         {
+            splashEnemy(null, this.transform.position);
             SpawnHitscanEffects(this.transform.position + this.transform.forward * scanRange);
         }
     }

@@ -14,7 +14,7 @@ public class GunPuller : VRTK_InteractableObject {
     [Tooltip("False for left side, true for right side")]
     public bool handSide = true;
 
-    public bool AlreadySpawned = false;
+    public GameObject SpawnedObj = null;
 
 
     void Start()
@@ -29,7 +29,7 @@ public class GunPuller : VRTK_InteractableObject {
 
     public override void StartUsing(GameObject usingObject)
     {
-        if (!AlreadySpawned)
+        if (SpawnedObj == null)
         {
             GetComponent<BoxCollider>().isTrigger = true;
             GameObject newGhost = Instantiate(ghostGun, usingObject.transform.position, Quaternion.identity) as GameObject;
@@ -37,7 +37,7 @@ public class GunPuller : VRTK_InteractableObject {
             newGhost.GetComponent<MechaWeaponInterfacePoint>().ActiveSide = ActiveSide;
 
             newGhost.GetComponent<MechaWeaponInterfacePoint>().myPuller = this;
-            AlreadySpawned = true;
+            SpawnedObj = newGhost;
         }
         else return;        
     }
@@ -45,7 +45,7 @@ public class GunPuller : VRTK_InteractableObject {
     //Performed when swiping up
     public void OnSwipeUp(GameObject usingObject)
     {
-        if (!AlreadySpawned)
+        if (SpawnedObj == null)
         {
             GetComponent<BoxCollider>().isTrigger = true;
             GameObject newGhost = Instantiate(ghostGun, usingObject.transform.position, Quaternion.identity) as GameObject;
@@ -53,7 +53,9 @@ public class GunPuller : VRTK_InteractableObject {
             newGhost.GetComponent<MechaWeaponInterfacePoint>().ActiveSide = ActiveSide;
 
             newGhost.GetComponent<MechaWeaponInterfacePoint>().myPuller = this;
-            AlreadySpawned = true;
+            SpawnedObj = newGhost;
+
+            Debug.Log("Spawned");
         }
         else return;  
     }

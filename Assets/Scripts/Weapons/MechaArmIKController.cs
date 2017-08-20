@@ -23,9 +23,6 @@ public class MechaArmIKController : MonoBehaviour
 
     public float ArmMovementSpeed = 5.0f;
 
-    public GameObject LaserPointer;
-    public LineRenderer lineRend;
-
     void Start()
     {
         WristTrans = Wrist.transform;
@@ -36,18 +33,10 @@ public class MechaArmIKController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetLines();
-
         if (WeaponInterface != null)
         {
-           // Debug.Log("Should be moving");
             WristTrans.LookAt(WeaponInterface.TargetPos);
-            LaserPointer.transform.LookAt(WeaponInterface.TargetPos);
             WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, WristOffset + (WeaponInterface.gameObject.transform.localPosition - MechaRoot.transform.localPosition) * WeaponOffsetScale, ArmMovementSpeed * Time.deltaTime);
-            //WristTrans.localPosition = Vector3.Lerp(WristTrans.localPosition, WristOffset + Vector3.Scale(WeaponInterface.gameObject.transform.localPosition, MechaRoot.transform.localRotation.eulerAngles ) * WeaponOffsetScale, ArmMovementSpeed * Time.deltaTime);
-            //WristTrans.localPosition = Vector3.Scale(WristTrans.localPosition, MechaRoot.transform.forward);
-            // transform.localRotation = Quaternion.Euler(0, 0,WeaponInterface.gameObject.transform.rotation.z);
-
 
         }
         else
@@ -63,25 +52,6 @@ public class MechaArmIKController : MonoBehaviour
 
             if (tmpWp)
                 WeaponInterface = tmpWp.GetComponent<MechaWeaponInterfacePoint>();
-        }
-    }
-
-    void SetLines()
-    {
-        if (WeaponInterface)
-        {
-            lineRend.enabled = true;
-
-            Vector3[] LineRendPts = new Vector3[2];
-
-            LineRendPts[0] = LaserPointer.transform.position;
-            LineRendPts[1] = WeaponInterface.TargetPos;
-
-            lineRend.SetPositions(LineRendPts);
-        }
-        else
-        {
-            lineRend.enabled = false;
         }
     }
 }

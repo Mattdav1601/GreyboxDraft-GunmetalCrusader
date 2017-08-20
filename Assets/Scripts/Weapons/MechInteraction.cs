@@ -17,8 +17,7 @@ public class MechInteraction : MonoBehaviour {
 
     public float oldCoordUpdateTime = 0.5f;
     float oldCoordUpdateTimer;
-
-    GameObject puller;
+    
     VRTK_InteractTouch iTouch;
 
 	// Use this for initialization
@@ -66,15 +65,18 @@ public class MechInteraction : MonoBehaviour {
             if (delta < 0)
             {
                 EventManager.instance.OnControllerDisconnect.Invoke(this.gameObject);
+                Debug.Log("Swiped Down");
             }
             else if (delta > 0)
             {
                 if (iTouch.GetTouchedObject())
                 {
-                    if(iTouch.GetTouchedObject().gameObject.tag == "MechComponent")
+                    if (iTouch.GetTouchedObject().gameObject.tag == "MechComponent")
+                    {
                         EventManager.instance.OnControllerConnect.Invoke(iTouch.GetTouchedObject(), this.gameObject);
-                }
-                
+                        Debug.Log("Swiped Up");
+                    }
+                }                
             }
         }
     }

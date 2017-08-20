@@ -52,6 +52,7 @@ public class FiredProjectile : FiredObject {
                     break;
                 }
         }
+        splashEnemy(other.gameObject, this.transform.position);
 
         Instantiate(impactEffect, this.transform.position, Quaternion.identity);
         Destroy(this.gameObject);

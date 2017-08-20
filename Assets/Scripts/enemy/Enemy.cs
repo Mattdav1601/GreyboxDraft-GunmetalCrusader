@@ -169,10 +169,12 @@ public class Enemy : MonoBehaviour {
         Destroy(marker);
         //Add to the death count, if any
         //Add to the point value
-        sound.AndroidDie(audios);
+        if(sound)
+            sound.AndroidDie(audios);
         //Make it explode
         agent.enabled = false;
-        ExploderSingleton.Instance.ExplodeObject(this.gameObject);
+        if(ExploderSingleton.Instance)
+            ExploderSingleton.Instance.ExplodeObject(this.gameObject);
 
         EventManager.instance.OnEnemyDeath.Invoke();
     }
@@ -182,7 +184,8 @@ public class Enemy : MonoBehaviour {
     public void TakeDamage(float takenDamage)
     {
         //Add some points when hit??
-        gameManager.IncreasePoints(10.0f);
+        if(gameManager)
+            gameManager.IncreasePoints(10.0f);
 
         //Take health away equal to the parameter given
         health -= takenDamage;

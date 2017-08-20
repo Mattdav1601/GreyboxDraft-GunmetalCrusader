@@ -19,11 +19,11 @@ public class EnemyDeath : UnityEvent{
 
 public class ControllerConnect : UnityEvent<GameObject, GameObject>
 {
-
 }
 
 //Called when the player disconnects from a gun
-public class OnDisconnect : UnityEvent<GameObject>{
+public class OnDisconnect : UnityEvent<GameObject>
+{
 }
 
 public class RoundStartWarning : UnityEvent<bool>{
@@ -31,31 +31,26 @@ public class RoundStartWarning : UnityEvent<bool>{
 
 public class RoundEndWarning : UnityEvent<bool>
 {
-
 }
 
 //Called when the player presses the trigger
 public class WeaponFire : UnityEvent<OnWeaponFirePacket>
 {
-
 }
 
 //Called when the player presses the trigger
 public class WeaponReload : UnityEvent<int>
 {
-
 }
 
 //Called when the player presses the trigger
 public class ReloadComplete : UnityEvent
 {
-
 }
 
 //Called when the player is out of ammo
 public class OutOfAmmunition : UnityEvent<int, bool>
 {
-
 }
 
 //called when the player attempts to reload

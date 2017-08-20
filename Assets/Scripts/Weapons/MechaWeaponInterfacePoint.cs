@@ -6,9 +6,9 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 {
     public enum E_ActiveSide
     {
-        EAS_Left,
-        EAS_Right,
-        EAS_Up
+        EAS_Left = 0,
+        EAS_Right = 1,
+        EAS_Up = 2
     };
 
     public E_ActiveSide ActiveSide = E_ActiveSide.EAS_Left;
@@ -36,10 +36,9 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     public Renderer[] rend;
 
-
     public Animation death;
 
-
+    private bool triggerDown = false;
 
     private void Start()
     {
@@ -73,10 +72,25 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
             }
         }
 
-        if (controllerEvents.triggerClicked)
+        if (controllerEvents)
         {
-            if(tag == "JumpJetInterface")
+            Debug.Log(triggerDown);
+            if (controllerEvents.triggerClicked != triggerDown)
+            {
+                if (ActiveSide != E_ActiveSide.EAS_Up)
+                {
+                    triggerDown = controllerEvents.triggerClicked;
+                    OnWeaponFirePacket wfp = new OnWeaponFirePacket();
+                    wfp.Pressed = triggerDown;
+                    wfp.SlotIndex = (int)ActiveSide;
+
+                    EventManager.instance.OnWeaponFire.Invoke(wfp);
+                }
+                else
+                {
                     Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo = true;
+                }
+            }
         }
 
         DoRaycast();
@@ -84,7 +98,6 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     void Destroy()
     {
-        myPuller.AlreadySpawned = false;
         Destroy(this.gameObject, 1.0f);
         death.Play();
     }

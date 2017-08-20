@@ -12,6 +12,10 @@ public class ReloadingHandle : VRTK_InteractableObject
     public GameObject reloadingobjectleft;
     public GameObject CurrentController;
 
+    // Stores which side of the mech this weapon is on. 0 = Left, 1 = Right. Any others will be completely inactive.
+    [Tooltip("Stores which side of the mech this weapon is on. 0 = Left, 1 = Right. Any others will be completely inactive.")]
+    [SerializeField]
+    public int sideIndex = 0;
 
     private MechaWeaponInterfacePoint[] WeaponInterfaces;
 
@@ -74,15 +78,6 @@ public class ReloadingHandle : VRTK_InteractableObject
 
     void Reload()
     {
-        Debug.Log("reloading handle activated");
-        if (this.gameObject.name == "RightReloadingHandle")
-        {
-            reloadingobjectright.GetComponent<MechaWeaponBehaviour>().ToldToReload = true;
-        }
-
-        else
-        {
-            reloadingobjectleft.GetComponent<MechaWeaponBehaviour>().ToldToReload = true;
-        }
+        EventManager.instance.OnWeaponReload.Invoke(sideIndex);
     }
 }
