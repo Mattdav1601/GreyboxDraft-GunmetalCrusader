@@ -75,21 +75,18 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
         if (controllerEvents)
         {
             Debug.Log(triggerDown);
-            if (controllerEvents.triggerClicked != triggerDown)
+            
+            if (ActiveSide != E_ActiveSide.EAS_Up)
             {
-                if (ActiveSide != E_ActiveSide.EAS_Up)
-                {
-                    triggerDown = controllerEvents.triggerClicked;
-                    OnWeaponFirePacket wfp = new OnWeaponFirePacket();
-                    wfp.Pressed = triggerDown;
-                    wfp.SlotIndex = (int)ActiveSide;
+                OnWeaponFirePacket wfp = new OnWeaponFirePacket();
+                wfp.Pressed = controllerEvents.triggerClicked;
+                wfp.SlotIndex = (int)ActiveSide;
 
-                    EventManager.instance.OnWeaponFire.Invoke(wfp);
-                }
-                else
-                {
-                    Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo = true;
-                }
+                EventManager.instance.OnWeaponFire.Invoke(wfp);
+            }
+            else
+            {
+                Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo = true;
             }
         }
 

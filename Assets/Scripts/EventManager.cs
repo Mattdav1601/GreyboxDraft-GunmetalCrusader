@@ -94,7 +94,7 @@ public class EventManager : MonoBehaviour
     public RoundEndWarning OnRoundEndWarning = new RoundEndWarning();
 	public WeaponFire OnWeaponFire = new WeaponFire();
 	public WeaponReload OnWeaponReload = new WeaponReload();
-	public ReloadComplete OnReloadComplete = new ReloadComplete();
+    public ReloadComplete OnReloadComplete = new ReloadComplete();
     public OutOfAmmunition OnOutOfAmmunition = new OutOfAmmunition();
 	public AttemptFireWhileDepleted OnAttemptFireWhileDepleted = new AttemptFireWhileDepleted();
     public ReloadAttempt OnReloadAttempt = new ReloadAttempt();

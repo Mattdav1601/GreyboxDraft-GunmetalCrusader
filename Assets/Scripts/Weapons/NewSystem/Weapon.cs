@@ -140,7 +140,7 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     private LineRenderer lineRenderer;
 
-
+    private bool playedOutOfAmmoVL = false;
 
     /*
 	 * Called on instance create
@@ -199,12 +199,7 @@ public class Weapon : MonoBehaviour
     void TakeFireInput(OnWeaponFirePacket wfp)
     {
         if (wfp.SlotIndex == this.sideIndex)
-        {
-            if (ammoCount > 0)
                 isFiring = wfp.Pressed;
-            else
-                DoReload(this.sideIndex); // DEBUG AUTORELOAD
-        }
     }
 
     /*
@@ -219,9 +214,10 @@ public class Weapon : MonoBehaviour
         else
         {
             isFiring = false;
-            if (ammoCount <= 0)
+            if (ammoCount <= 0 && !playedOutOfAmmoVL)
             {
                 EventManager.instance.OnAttemptFireWhileDepleted.Invoke();
+                playedOutOfAmmoVL = true;
             }
         }
     }
@@ -265,10 +261,9 @@ public class Weapon : MonoBehaviour
                 reloadTimer = maxReloadTime;
                 isReloading = true;
                 weaponAnimation.Play("Reload");
+                // Tell the event manager we have begun reloading this weapon.
+                EventManager.instance.OnReloadAttempt.Invoke(clipCount > 0);
             }
-
-            // Tell the event manager we have begun reloading this weapon.
-            EventManager.instance.OnReloadAttempt.Invoke(clipCount > 0);
         }
     }
 
@@ -283,6 +278,7 @@ public class Weapon : MonoBehaviour
             fillAmmo();
             modifyClips(-1);
             resetMuzzle();
+            playedOutOfAmmoVL = false;
 
             // Tell the event manager we have finished reloading this weapon
             EventManager.instance.OnReloadComplete.Invoke();
