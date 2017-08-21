@@ -191,6 +191,8 @@ public class Weapon : MonoBehaviour
 
         // Decrement the recoilTimer
         resetVolley();
+
+        broadcastAmmoInfo();
     }
 
     /*
@@ -370,12 +372,10 @@ public class Weapon : MonoBehaviour
                 // Update Actual Aim
                 muzzles[i].transform.LookAt(uap.targetloc);
             }
-
-            if (uap.enabled == false)
-                lineRenderer.enabled = false;
+            
+            lineRenderer.enabled = !uap.enabled;
 
             // Update Line Renderer
-            lineRenderer.enabled = true;
             Vector3[] p = new Vector3[2];
             p[0] = lineRenderer.gameObject.transform.position;
             p[1] = uap.targetloc;
@@ -399,5 +399,17 @@ public class Weapon : MonoBehaviour
                 lineRenderer.endColor = GotAmmo;
             }
         }
+    }
+
+    /*
+     * Reset our volley after the cool down
+     */
+    void broadcastAmmoInfo()
+    {
+        OnUpdateAmmoDisplayPacket uadp = new OnUpdateAmmoDisplayPacket();
+        uadp.sideIndex = sideIndex;
+        uadp.field = ammoCount.ToString() + "//" + clipCount.ToString();
+
+        EventManager.instance.OnUpdateAmmoDisplay.Invoke(uadp);
     }
 }

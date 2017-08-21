@@ -16,12 +16,7 @@ public class HUD_AmmoReadout : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        string ammo = "00/0";
-        /*foreach (MechaWeaponBehaviour m in FindObjectsOfType<MechaWeaponBehaviour>())
-        {
-            if (m.ActiveSide == externalInterface.ActiveSide)
-                ammo = m.GetAmmoString();
-        }*/
+        string ammo = externalInterface.field;
         t.text = ammo.ToString();
     }
 }

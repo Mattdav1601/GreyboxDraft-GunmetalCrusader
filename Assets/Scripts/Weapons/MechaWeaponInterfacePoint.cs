@@ -40,6 +40,10 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     private bool triggerDown = false;
 
+    public string field = "";
+
+    private bool dying = false;
+
     private void Start()
     {
         EventManager.instance.OnControllerDisconnect.AddListener((e)=>
@@ -47,6 +51,14 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
             if(UsingController == e)
             {
                 Destroy();
+            }
+        });
+
+        EventManager.instance.OnUpdateAmmoDisplay.AddListener((e) =>
+        {
+            if (e.sideIndex == (int)ActiveSide)
+            {
+                field = e.field;
             }
         });
 
@@ -67,7 +79,6 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
             //Check if the touchpad is pressed
             if (controllerEvents.touchpadPressed && InvulFrames <= 0)
             {
-                broadcastPositionData(false);
                 Destroy();
             }
         }
@@ -84,7 +95,7 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
                 EventManager.instance.OnWeaponFire.Invoke(wfp);
             }
-            else
+            else if (controllerEvents.triggerClicked && ActiveSide == E_ActiveSide.EAS_Up)
             {
                 Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo = true;
             }
@@ -97,6 +108,7 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     void Destroy()
     {
+        dying = true;
         Destroy(this.gameObject, 1.0f);
         death.Play();
     }
@@ -147,14 +159,14 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
 
     void SetJumpPoint(Vector3 target)
     {
+        Debug.Log("Peebis");
         JumpDestination.SetActive(true);
         if (Player.GetComponent<PlayerMovement>().WeDoinAHekkinJumpo == false)
         {
             JumpDestination.transform.position = target;
         }
 
-
-        if (this.gameObject.tag == "JumpJetInterface")
+        if (ActiveSide == E_ActiveSide.EAS_Up)
         {
             JumpDestination.GetComponent<Renderer>().enabled = true;
         }
@@ -195,13 +207,13 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
         lineRend.SetPositions(LineRendPts);
     }
 
-    void broadcastPositionData(bool act = true)
+    void broadcastPositionData()
     {
         OnUpdateAimPacket uap = new OnUpdateAimPacket();
 
         uap.sideIndex = (int)ActiveSide;
         uap.targetloc = TargetPos;
-        uap.enabled = act;
+        uap.enabled = dying;
 
         EventManager.instance.OnUpdateAim.Invoke(uap);
     }

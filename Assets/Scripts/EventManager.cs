@@ -68,6 +68,11 @@ public class UpdateAim : UnityEvent<OnUpdateAimPacket>
 {
 }
 
+//Called when the weapon's ammo changes
+public class UpdateAmmoDisplay : UnityEvent<OnUpdateAmmoDisplayPacket>
+{
+}
+
 public class EventManager : MonoBehaviour
 {
     private static EventManager inst;
@@ -99,6 +104,7 @@ public class EventManager : MonoBehaviour
 	public AttemptFireWhileDepleted OnAttemptFireWhileDepleted = new AttemptFireWhileDepleted();
     public ReloadAttempt OnReloadAttempt = new ReloadAttempt();
     public UpdateAim OnUpdateAim = new UpdateAim();
+    public UpdateAmmoDisplay OnUpdateAmmoDisplay = new UpdateAmmoDisplay();
 
     private void Awake()
     {
