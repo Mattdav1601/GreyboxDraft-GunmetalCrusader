@@ -63,6 +63,11 @@ public class ReloadAttempt : UnityEvent<bool>
 {
 }
 
+//called every few frames to update the weapon's aim (Or to tell weapons they've been deactivated)
+public class UpdateAim : UnityEvent<OnUpdateAimPacket>
+{
+}
+
 public class EventManager : MonoBehaviour
 {
     private static EventManager inst;
@@ -93,6 +98,7 @@ public class EventManager : MonoBehaviour
     public OutOfAmmunition OnOutOfAmmunition = new OutOfAmmunition();
 	public AttemptFireWhileDepleted OnAttemptFireWhileDepleted = new AttemptFireWhileDepleted();
     public ReloadAttempt OnReloadAttempt = new ReloadAttempt();
+    public UpdateAim OnUpdateAim = new UpdateAim();
 
     private void Awake()
     {

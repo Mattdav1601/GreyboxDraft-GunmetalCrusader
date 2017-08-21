@@ -34,8 +34,7 @@ public class FiredProjectile : FiredObject {
 	 * Called once per frame.
 	 */
     protected override void Update () {
-        rb.transform.Translate(this.transform.forward * (moveSpeed * Time.deltaTime));
-        this.transform.eulerAngles = this.transform.eulerAngles + new Vector3(0,0, (rotateSpeed * Time.deltaTime));
+        transform.position += this.transform.forward * (moveSpeed * Time.deltaTime);
 	}
 
     /*
@@ -45,6 +44,10 @@ public class FiredProjectile : FiredObject {
     {
         switch(other.tag)
         {
+            case "Player":
+                {
+                    return;
+                }
             case "Enemy":
                 {
                     // TODO: Add headshot support

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour {
+public class Weapon : MonoBehaviour
+{
 
     /* Dakota's hekkin checkulisto
 	 * Firing Functionality (Spawn an actor while firing that does stuff)
@@ -127,16 +128,37 @@ public class Weapon : MonoBehaviour {
     [SerializeField]
     private float reloadAnimSpeed = 0.0f;
 
+    //The linerenderer colors for different weapon states
+    [Tooltip("The following are colours for the linerenderer depending on if the gun has ammo or nooooot")]
+    [SerializeField]
+    private Color GotAmmo = Color.green;
+    [SerializeField]
+    private Color ClipEmpty = Color.red;
+    [SerializeField]
+    private Color OutOfAllAmmo = Color.gray;
+
+    [SerializeField]
+    private LineRenderer lineRenderer;
+
+
+
     /*
 	 * Called on instance create
 	 */
-    void Start() {
+    void Start()
+    {
         // Bind Events
-        EventManager.instance.OnWeaponFire.AddListener((wfp) => {
+        EventManager.instance.OnWeaponFire.AddListener((wfp) =>
+        {
             TakeFireInput(wfp);
         });
-        EventManager.instance.OnWeaponReload.AddListener((i) => {
+        EventManager.instance.OnWeaponReload.AddListener((i) =>
+        {
             DoReload(i);
+        });
+        EventManager.instance.OnUpdateAim.AddListener((i) =>
+        {
+            updateAim(i);
         });
 
         // Bind Animations
@@ -153,7 +175,8 @@ public class Weapon : MonoBehaviour {
     /*
 	 * Called once per frame.
 	 */
-    void Update() {
+    void Update()
+    {
         // Call CheckFire to...check the fire.
         CheckFire();
 
@@ -168,29 +191,38 @@ public class Weapon : MonoBehaviour {
 
         // Decrement the recoilTimer
         resetVolley();
-
-        // Update Line Renderers
-        updateLineRenderers();
     }
 
     /*
 	 * TakeFireInput is called when OnWeaponFire is called
 	 */
-    void TakeFireInput(OnWeaponFirePacket wfp) {
+    void TakeFireInput(OnWeaponFirePacket wfp)
+    {
         if (wfp.SlotIndex == this.sideIndex)
-            isFiring = wfp.Pressed;
+        {
+            if (ammoCount > 0)
+                isFiring = wfp.Pressed;
+            else
+                DoReload(this.sideIndex); // DEBUG AUTORELOAD
+        }
     }
 
     /*
 	 * Called once a frame to see if we are attempting to fire, and doing so if we can.
 	 */
-    void CheckFire() {
-        if (isFiring && fireTimer <= 0.0f && ammoCount > 0) {
+    void CheckFire()
+    {
+        if (isFiring && fireTimer <= 0.0f && ammoCount > 0)
+        {
             DoFire();
-        } else {
+        }
+        else
+        {
             isFiring = false;
             if (ammoCount <= 0)
+            {
                 EventManager.instance.OnAttemptFireWhileDepleted.Invoke();
+            }
         }
     }
 
@@ -206,7 +238,8 @@ public class Weapon : MonoBehaviour {
     /*
 	 * Called from CheckFire when we can and are firing the weapon.
 	 */
-    void DoFire() {
+    void DoFire()
+    {
         for (int i = 0; i < projectilesPerShot; i++) // For Shotguns, fire more than one
             Instantiate(firedObject, muzzles[currentMuzzle].transform.position, Quaternion.Euler(muzzles[currentMuzzle].transform.eulerAngles + new Vector3(CalcSpreadAmount().x, CalcSpreadAmount().y, 0)));//muzzles[currentMuzzle].transform.rotation);
         muzzles[currentMuzzle].GetComponent<ParticleSystem>().Play();
@@ -222,9 +255,12 @@ public class Weapon : MonoBehaviour {
     /*
 	 * TakeFireInput is called when OnWeaponReload is called
 	 */
-    void DoReload(int i) {
-        if (i == sideIndex) {
-            if (clipCount > 0) {
+    void DoReload(int i)
+    {
+        if (i == sideIndex)
+        {
+            if (clipCount > 0)
+            {
                 modifyAmmo(-maxAmmoCount);
                 reloadTimer = maxReloadTime;
                 isReloading = true;
@@ -239,8 +275,10 @@ public class Weapon : MonoBehaviour {
     /*
 	 * Called once a frame to see if we are done reloading, if at all.
 	 */
-    void CheckReloadDone() {
-        if (isReloading && reloadTimer <= 0) {
+    void CheckReloadDone()
+    {
+        if (isReloading && reloadTimer <= 0)
+        {
             isReloading = false;
             fillAmmo();
             modifyClips(-1);
@@ -324,29 +362,46 @@ public class Weapon : MonoBehaviour {
     }
 
     /*
-     * Update Line Renders
+     * Update Aim
      */
-    void updateLineRenderers(){
-        for(int i = 0; i < muzzles.Length; i ++)
+    void updateAim(OnUpdateAimPacket uap)
+    {
+        if (uap.sideIndex == sideIndex)
         {
-            LineRenderer lr = muzzles[i].GetComponent<LineRenderer>();
+            Debug.Log("Received Aim Packet");
+            for (int i = 0; i < muzzles.Length; i++)
+            {
+                // Update Actual Aim
+                muzzles[i].transform.LookAt(uap.targetloc);
+            }
 
-            //if (lr.enabled)
-            //{
-                Vector3[] p = new Vector3[2];
-                p[0] = muzzles[i].transform.position;
+            if (uap.enabled == false)
+                lineRenderer.enabled = false;
 
+            // Update Line Renderer
+            lineRenderer.enabled = true;
+            Vector3[] p = new Vector3[2];
+            p[0] = lineRenderer.gameObject.transform.position;
+            p[1] = uap.targetloc;
 
-                RaycastHit hit;
+            lineRenderer.SetPositions(p);
 
-                if (Physics.Raycast(muzzles[i].transform.position, muzzles[i].transform.forward, out hit))
-                {
-                    p[1] = hit.point;
-                }
-                else p[1] = muzzles[i].transform.position + muzzles[i].transform.forward * 1000.0f;
-            //}
-
-            lr.enabled = (i == currentMuzzle);
+            // Update Color of Line
+            if (clipCount <= 0 && ammoCount <= 0)
+            {
+                lineRenderer.startColor = OutOfAllAmmo;
+                lineRenderer.endColor = OutOfAllAmmo;
+            }
+            else if(ammoCount <= 0)
+            {
+                lineRenderer.startColor = ClipEmpty;
+                lineRenderer.endColor = ClipEmpty;
+            }
+            else
+            {
+                lineRenderer.startColor = GotAmmo;
+                lineRenderer.endColor = GotAmmo;
+            }
         }
     }
 }

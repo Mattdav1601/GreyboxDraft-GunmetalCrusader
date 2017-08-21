@@ -60,7 +60,6 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
             this.transform.position = UsingController.transform.position;
             this.transform.rotation = UsingController.transform.rotation;
 
-
             //Take down invuln frames
             if (InvulFrames > 0)
                 --InvulFrames;
@@ -68,6 +67,7 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
             //Check if the touchpad is pressed
             if (controllerEvents.touchpadPressed && InvulFrames <= 0)
             {
+                broadcastPositionData(false);
                 Destroy();
             }
         }
@@ -94,6 +94,8 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
         }
 
         DoRaycast();
+
+        broadcastPositionData();
     }
 
     void Destroy()
@@ -194,5 +196,16 @@ public class MechaWeaponInterfacePoint : MonoBehaviour
         }
 
         lineRend.SetPositions(LineRendPts);
+    }
+
+    void broadcastPositionData(bool act = true)
+    {
+        OnUpdateAimPacket uap = new OnUpdateAimPacket();
+
+        uap.sideIndex = (int)ActiveSide;
+        uap.targetloc = TargetPos;
+        uap.enabled = act;
+
+        EventManager.instance.OnUpdateAim.Invoke(uap);
     }
 }
