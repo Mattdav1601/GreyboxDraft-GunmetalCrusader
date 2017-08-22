@@ -39,6 +39,7 @@ public class PlayerHealth : MonoBehaviour {
     {
         CurrentHealth -= damage;
         soundController.TookDamage();
+        soundController.TakingDamage();
         Debug.Log("PlayerTookDamage");
         if (CurrentHealth <= 0)
         {

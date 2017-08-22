@@ -17,7 +17,10 @@ public class God : MonoBehaviour {
     private bool GameStarted;
 	// Use this for initialization
 	void Start () {
-		
+        EventManager.instance.OnRoundStart.AddListener((p)=>{
+            ShopDestroy();
+        });
+        EventManager.instance.OnRoundEnd.AddListener(ShopPlacement);
 	}
 	
 	// Update is called once per frame

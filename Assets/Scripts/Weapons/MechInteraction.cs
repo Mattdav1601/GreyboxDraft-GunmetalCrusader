@@ -60,7 +60,7 @@ public class MechInteraction : MonoBehaviour {
 
         float delta = newCoords.y - oldCoords.y;
 
-        if (Mathf.Abs(delta) > 0.9f)
+        if (Mathf.Abs(delta) > 0.6f)
         {
             if (delta < 0)
             {

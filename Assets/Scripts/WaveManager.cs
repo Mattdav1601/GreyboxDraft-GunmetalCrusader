@@ -96,6 +96,7 @@ public class WaveManager : MonoBehaviour {
     private void Update()
     {
         RoundStarter();
+        print("Dead Count " + deadEnemyCount + " Round Total" + roundEnemyTotal);
     }
 
     public int getRoundNum()

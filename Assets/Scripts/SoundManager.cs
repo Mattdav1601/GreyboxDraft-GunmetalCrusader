@@ -121,11 +121,13 @@ public class SoundManager : MonoBehaviour {
     public void RoundStarted()
     {
         CoPilot.PlayOneShot(_RoundStarted[Random.Range(0, _RoundStarted.Length)]);
+        StartSoundTrack();
     }
 
     public void RoundEnded()
     {
         Invoke("ActualRoundEnded", 3);
+        EndSoundTrack();
     }
 
     void ActualRoundEnded()

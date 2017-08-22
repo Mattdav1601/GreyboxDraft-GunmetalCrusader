@@ -78,6 +78,7 @@ public class Enemy : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         target = GameObject.FindGameObjectWithTag("Player");
         health = maxHealth;
+        agent.speed = moveSpeed;
         _WaveManager = GameObject.FindObjectOfType<WaveManager>();
         TimeTillAttack = AttackWindUpTime;
         Movement = false;
